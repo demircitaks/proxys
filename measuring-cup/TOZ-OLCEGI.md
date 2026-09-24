@@ -74,8 +74,12 @@ geniştir), böylece doz duvara sürtmeden çıkar; iç köşe yoktur.
 | 4 | `stl/toz-olcegi/04-huni-pet.stl` | **Ağız tablada** | 17,9 cm³ |
 | 5 | `stl/toz-olcegi/05-mentese-mili.stl` | Dik | 0,3 cm³ |
 
-**2, 3, 4 ve 5 iki boyda ortaktır.** 15 ↔ 30 mL geçmek için sadece hazneyi
-değiştirirsiniz.
+**Hazne iki ayrı dosyadır** — `01-hazne-15ml.stl` (13,4 mm derin) ve
+`01-hazne-30ml.stl` (27,1 mm derin); ikisini de basın. **2, 3, 4 ve 5 iki boyda
+ortaktır.** 15 ↔ 30 mL geçmek için sadece hazneyi değiştirirsiniz: sapın
+bileziğini çıkarıp öbür hazneye takarsınız, kapak ve mil de aynı şekilde.
+
+![İki hazne](docs/toz-hazneler.png)
 
 Sapın ayrı parça olması keyfî değil: hazne **ağzı tablada** basılıyor, böylece
 silme kenarı birinci katman kadar keskin çıkıyor ve sızdırmazlık yüzeyi düz,
