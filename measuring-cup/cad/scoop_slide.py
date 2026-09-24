@@ -43,21 +43,27 @@ P = dict(
     CAP_H       = 12.0,   # dis bolgesi yuksekligi
     VENT_N      = 4,
     PLATE_T     = 2.0,
-    PLATE_HW    = 19.4,   # plakanin yari genisligi (duz kenarlar)
+    PLATE_HW    = 21.0,   # plakanin yari genisligi; O-ring cemberini (r 19.9) tamamen orter
     GROOVE_LIP  = 1.8,    # kanal dudaginin plaka altina giren genisligi
     GROOVE_WALL = 2.4,
     LIP_T       = 0.8,    # dudak kalinligi
     FIT         = 0.30,
-    WEDGE       = 0.35,   # kapanirken plakayi yukari sikan rampa
-    WEDGE_LEN   = 7.0,
+    WEDGE       = 0.50,   # kapanirken plakayi yukari sikan rampa (= O-ring sikistirma)
+    WEDGE_LEN   = 8.0,
+
+    # --- O-ring: oturma bileziginde yuva; plaka kapaninca uzerine sikisir ----
+    ORING_R     = 19.9,   # cember yaricapi (ID 38 x kesit 1.5 standart O-ring)
+    ORING_CS    = 1.5,
+    ORING_GW    = 1.75,   # yuva genisligi
+    ORING_GD    = 1.05,   # yuva derinligi -> 0.45 mm disarida kalir, kama onu sikar
 
     # --- surgu -------------------------------------------------------------
-    TRAVEL      = 26.0,
+    TRAVEL      = 34.0,   # plaka gozenegi neredeyse tamamen bosaltir
     PLATE_BACK  = 40.0,   # plakanin kapali konumda arkaya uzandigi x
     ARM_X0      = 40.0,   # uzengi kollari
     ARM_X1      = 46.0,
-    ARM_Y0      = 16.4,
-    ARM_Y1      = 19.4,
+    ARM_Y0      = 18.0,
+    ARM_Y1      = 21.0,
     ARM_TOP     = 24.5,
     GABLE_H     = 5.5,    # uzengi ustundeki bastirma yuzeyi (45 derece cati)
 
@@ -171,6 +177,9 @@ def build_body(size, p=P):
                                        40.0, p["PLATE_HW"] + p["FIT"] / 2),
                                   -(p["PLATE_T"] + p["FIT"] + p["LIP_T"]) - 0.1,
                                   -(p["PLATE_T"] + p["FIT"] + p["LIP_T"]) + p["LIP_T"] + 0.05))
+    # O-ring yuvasi: oturma bileziginin alt yuzunde halka kanal
+    body = g.diff(body, g.tube(p["ORING_R"] - p["ORING_GW"] / 2, p["ORING_R"] + p["ORING_GW"] / 2,
+                               -0.1, p["ORING_GD"]))
     # sap kilit cukurlari
     for i in range(p["SNAP_N"]):
         a = 90.0 + 180.0 * i
@@ -346,6 +355,14 @@ def build_lid(size, p=P):
     for a in range(0, 360, 90):                                # esneme yariklari
         lid = g.diff(lid, g.sector(r_sk_i - 1, r_sk_o + 1, a + 45 - 0.6, a + 45 + 0.6, zb - 1, zc - 0.6))
     return lid
+
+
+# ===========================================================================
+# PARCA 6 -- TPU CONTA (O-ring bulunmazsa; TPU 95A ile basilir)
+# ===========================================================================
+def build_gasket(p=P):
+    w, hgt = p["ORING_GW"] - 0.15, p["ORING_GD"] + 0.45
+    return g.tube(p["ORING_R"] - w / 2, p["ORING_R"] + w / 2, 0.0, hgt)
 
 
 # ===========================================================================

@@ -22,19 +22,23 @@
     "CAP_H": 12.0,
     "VENT_N": 4,
     "PLATE_T": 2.0,
-    "PLATE_HW": 19.4,
+    "PLATE_HW": 21.0,
     "GROOVE_LIP": 1.8,
     "GROOVE_WALL": 2.4,
     "LIP_T": 0.8,
     "FIT": 0.3,
-    "WEDGE": 0.35,
-    "WEDGE_LEN": 7.0,
-    "TRAVEL": 26.0,
+    "WEDGE": 0.5,
+    "WEDGE_LEN": 8.0,
+    "ORING_R": 19.9,
+    "ORING_CS": 1.5,
+    "ORING_GW": 1.75,
+    "ORING_GD": 1.05,
+    "TRAVEL": 34.0,
     "PLATE_BACK": 40.0,
     "ARM_X0": 40.0,
     "ARM_X1": 46.0,
-    "ARM_Y0": 16.4,
-    "ARM_Y1": 19.4,
+    "ARM_Y0": 18.0,
+    "ARM_Y1": 21.0,
     "ARM_TOP": 24.5,
     "GABLE_H": 5.5,
     "COLLAR_T": 3.4,
@@ -54,7 +58,7 @@
     {
       "dosya": "01-hazne-15ml.stl",
       "not_": "Baski: AGIZ TABLADA.",
-      "hacim_cm3": 6.76,
+      "hacim_cm3": 6.42,
       "olcu_mm": [
         48.4,
         48.4,
@@ -64,7 +68,7 @@
     {
       "dosya": "01-hazne-30ml.stl",
       "not_": "Baski: AGIZ TABLADA.",
-      "hacim_cm3": 10.74,
+      "hacim_cm3": 10.4,
       "olcu_mm": [
         49.8,
         49.8,
@@ -74,10 +78,10 @@
     {
       "dosya": "02-surgu.stl",
       "not_": "Baski: PLAKA TABLADA; uzengi catisi 33 mm koprü -> koprü ayarlari acik.",
-      "hacim_cm3": 6.34,
+      "hacim_cm3": 6.9,
       "olcu_mm": [
-        65.4,
-        38.8,
+        67.0,
+        42.0,
         32.0
       ]
     },
@@ -94,7 +98,7 @@
     {
       "dosya": "04-huni-pet-vidali.stl",
       "not_": "Baski: AGIZ TABLADA. PCO-1881 disli; siseye vidalanir, kepce ustune klik yapar.",
-      "hacim_cm3": 15.71,
+      "hacim_cm3": 15.59,
       "olcu_mm": [
         55.6,
         55.6,
@@ -120,6 +124,16 @@
         53.1,
         6.6
       ]
+    },
+    {
+      "dosya": "06-conta-tpu.stl",
+      "not_": "Opsiyonel: O-ring (ID 38 x 1.5) yoksa TPU 95A ile basin.",
+      "hacim_cm3": 0.3,
+      "olcu_mm": [
+        41.4,
+        41.4,
+        1.5
+      ]
     }
   ],
   "dogrulama": {
@@ -142,28 +156,32 @@
     },
     "gozenek": {
       "10 mm": {
-        "acik_mm2": 355.8,
-        "yuzde": 31.4
+        "acik_mm2": 278.4,
+        "yuzde": 24.5
       },
-      "18 mm": {
-        "acik_mm2": 641.0,
-        "yuzde": 56.5
+      "20 mm": {
+        "acik_mm2": 644.1,
+        "yuzde": 56.8
       },
-      "26 mm": {
-        "acik_mm2": 891.8,
-        "yuzde": 78.6
+      "30 mm": {
+        "acik_mm2": 953.1,
+        "yuzde": 84.0
+      },
+      "34 mm": {
+        "acik_mm2": 1048.6,
+        "yuzde": 92.5
       }
     },
     "baski_cikintilari": {
       "hazne": {
-        "sorunlu_mm2": 121.3,
-        "yuzde": 2.33,
-        "koprü_mm2": 121.3
+        "sorunlu_mm2": 113.2,
+        "yuzde": 2.19,
+        "koprü_mm2": 113.2
       },
       "surgu": {
-        "sorunlu_mm2": 196.8,
-        "yuzde": 3.06,
-        "koprü_mm2": 196.8
+        "sorunlu_mm2": 216.0,
+        "yuzde": 3.09,
+        "koprü_mm2": 216.0
       },
       "sap": {
         "sorunlu_mm2": 24.9,
@@ -171,9 +189,9 @@
         "koprü_mm2": 8.7
       },
       "huni": {
-        "sorunlu_mm2": 379.9,
-        "yuzde": 3.24,
-        "koprü_mm2": 155.6
+        "sorunlu_mm2": 389.9,
+        "yuzde": 3.35,
+        "koprü_mm2": 165.7
       },
       "kapak": {
         "sorunlu_mm2": 188.2,

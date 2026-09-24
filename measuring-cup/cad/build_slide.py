@@ -58,7 +58,7 @@ def verify(p=S.P):
                                           sap=round(abs(g.inter(sap, lids[s]).volume), 3))
                         for s in S.SIZES}
     opens = {}
-    for d in (10, 18, 26):
+    for d in (10, 20, 30, 34):
         o, t = S.open_fraction(p, d)
         opens["%d mm" % d] = dict(acik_mm2=round(o, 1), yuzde=round(100 * o / t, 1))
     out["gozenek"] = opens
@@ -89,6 +89,7 @@ def main(render_png=True):
          "Baski: AGIZ TABLADA. PCO-1881 disli; siseye vidalanir, kepce ustune klik yapar."),
         ("05-ust-kapak-15ml.stl", on_bed(flip(S.build_lid(15))), "Baski: TEPE TABLADA."),
         ("05-ust-kapak-30ml.stl", on_bed(flip(S.build_lid(30))), "Baski: TEPE TABLADA."),
+        ("06-conta-tpu.stl", on_bed(S.build_gasket()), "Opsiyonel: O-ring (ID 38 x 1.5) yoksa TPU 95A ile basin."),
     ]
     report = {"parametreler": dict(S.P), "parcalar": []}
     for name, mesh, note in parts:

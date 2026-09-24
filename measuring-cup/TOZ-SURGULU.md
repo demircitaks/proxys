@@ -23,31 +23,34 @@ Kaldırılan menteşeli versiyon `stl/toz-olcegi/` altında duruyor; bu klasör
   (z = 0, hacim datumu).
 - **Başparmakla it.** Plakanın arkasındaki bar sapın boynunun altından geçer; iki
   yandan yükselen üzengi sapın üstünde birleşir. Üzengiyi sapa doğru itince plaka
-  26 mm geri kayar, gözenek açılır, toz düşer. Geri çekince kapanır.
-- **Kama kilidi.** Kanal dudakları öne doğru 0,35 mm yükselir: plaka kapanırken
-  son 7 mm'de oturma yüzeyine sıkışır. Taşırken toz elenmez, sürgü kendiliğinden
-  açılmaz.
+  34 mm geri kayar, gözenek açılır, toz düşer. Geri çekince kapanır.
+- **O-ring + kama kilidi.** Oturma bileziğinde Ø38 × 1,5 O-ring yuvası var; kanal
+  dudakları öne doğru 0,5 mm yükselir, plaka kapanırken son 8 mm'de O-ring'e
+  sıkışır. Çantada toz-sıkı; sürgü kendiliğinden açılmaz.
 - **Yay yok.** İki yönlü başparmak hareketi. Unutursanız toz akar, hemen fark
   edersiniz.
 
 | Ölçülen | |
 |---|---|
 | Gözenek | Ø38, tabanda hiçbir daralma yok |
-| 26 mm sürgüde gerçekten açık | **892 mm²** (%79) — menteşeli versiyondan daha fazla |
-| Sürgü çarpışması (0–26 mm, her 1 mm, iki boy, sap ve huni dahil) | **0,000 mm³** |
+| 34 mm sürgüde gerçekten açık | **%92,5** (1049 mm²); 20 mm'de %57, 30 mm'de %84 |
+| Sürgü çarpışması (0–34 mm, her 1 mm, iki boy, sap, huni ve kapak dahil) | **0,000 mm³** |
 | Kepçenin altında sarkan | 3,1 mm (kanal dudakları); hepsi düz |
 | Silme hacim | 15,0000 / 30,0000 mL |
 
-## 2. Daldırınca ne olur
+## 2. Toz kaçağı — üç yol, üç önlem
 
-Tozla temas eden alt yüzey: plakanın düz altı + iki kanal dudağının düz altı, hepsi
-aynı düzlemde. Aradaki 0,3 mm'lik boşluk aşağı açık; kaldırınca ne girdiyse düşer.
-Sapın altında cep yok. Kabın dış yüzeyi 7° konik ve pürüzsüz.
+| Yol | Önlem |
+|---|---|
+| **Çantada, plaka kenarından sızma.** İlk tasarımda plaka oturma bileziğini yalnız 0,4 mm bindiriyordu. | Plaka 42 mm'ye genişletildi; bilezikte **O-ring yuvası** (Ø38 × 1,5, standart). Kapanırken kama plakayı O-ring'e 0,45 mm sıkar. Üstte kapağın halkası, altta O-ring: iki uç da conta ile kapalı. |
+| **Geri kayarken arkadan taşan toz filmi.** Plaka tozun altından çekilirken üstünde ince bir film taşıyordu. | O-ring aynı zamanda **silecek**: plaka altından geçerken yüzeyini sıyırır. Bileziğin 0,3 mm boşluğundan geçen film yerine O-ring'in sıfır boşluğu var. |
+| **Arka şeritte kalan toz.** 26 mm strokta gözeneğin %21'i kapalı kalıyor, üstündeki toz kapta kalıyordu (15 mL'de ~%10 doz hatası). | Strok **34 mm**: gözeneğin %92,5'i açılır, kalan 6 mm'lik şerit tozun kendi kayma açısıyla (~35°) boşalır. |
 
-Plaka geri kayarken üstündeki tozu kabın arka kenarına sürter; bir kısmı barın
-üstünde dışarı çıkar ve **kabın arkasında, sapın altında** yere düşer (gösterdiğiniz
-üründe de böyledir). Bu yüzden boşaltırken kepçeyi huninin/şişenin üstünde tutun,
-masanın değil.
+Daldırınca tozla temas eden alt yüzey hâlâ düz: plakanın altı + iki kanal
+dudağı, aynı düzlemde. Kanal boşluğuna giren toz aşağı açık, kaldırınca düşer;
+O-ring'in iç tarafına ulaşamaz.
+
+O-ring bulamazsanız `06-conta-tpu.stl`'yi TPU 95A ile basın (aynı yuvaya oturur).
 
 ## 3. Parçalar
 
@@ -60,6 +63,7 @@ masanın değil.
 | 3 | `03-sap.stl` | **Bilezik tablada** |
 | 4 | `04-huni-pet-vidali.stl` | **Ağız tablada** — PCO-1881 dişli, şişeye vidalanır |
 | 5 | `05-ust-kapak-15ml.stl` · `05-ust-kapak-30ml.stl` | **Tepe tablada** |
+| 6 | `06-conta-tpu.stl` | Düz — yalnız O-ring bulamazsanız (TPU 95A) |
 
 2, 3 ve 4 iki boyda ortaktır. Hazne ve üst kapak boya özeldir (ağız çapları
 farklı: 41 / 43,6 mm).
@@ -106,16 +110,18 @@ yüzeyi ütülenebilir üst yüzey olur; kanallar baskıda yukarı büyür.
 | Köprü | Sürgü için köprü hızı düşük, fan tam |
 | Ironing | Haznenin üst yüzeyleri (oturma bileziği) |
 
-Plaka ile kanal arasında 0,3 mm çapsal boşluk var. İlk baskıda sürgü sıkı gelirse
+Plaka ile kanal arasında 0,3 mm çapsal boşluk var. O-ring yuvasına 1,5 mm kesitli standart O-ring girer; 1,6 da olur. İlk baskıda sürgü sıkı gelirse
 `P["FIT"]`'i 0,40 yapın; bol gelirse 0,25.
 
 ## 5. Montaj
 
+0. O-ring'i (Ø38 × 1,5) oturma bileziğindeki yuvaya bastırın.
 1. Sürgüyü kabın arkasından, kanalların altından sokup öne kadar itin. Son
-   7 mm'de kama sıkışmasını hissedersiniz.
+   8 mm'de O-ring'e sıkışmasını hissedersiniz.
 2. Sapı kabın üstünden geçirip bastırın; iki tırnak yuvalarına oturur. Sapın boynu
    üzenginin iki kolu arasından geçer.
-3. Üzengiyi ileri-geri kaydırıp bakın: 26 mm serbest hareket.
+3. Üzengiyi ileri-geri kaydırıp bakın: 34 mm serbest hareket, son 8 mm'de
+   O-ring'e sıkışma hissi.
 
 Sökmek için sapı çıkarın, sürgüyü arkaya doğru çekip alın. Üç parça da elde
 yıkanır; kanalları parmakla/fırçayla temizleyin.
@@ -143,11 +149,11 @@ Tozu yerleştirmek için kabı tıklatmayın — yığın yoğunluğu %10–15 d
 
 - **Gram değil hacim.** Hacim ±%2; gram, tozun yoğunluğuna göre 15 mL ≈ 5–8 g,
   30 mL ≈ 10–17 g. Bir kez tartın.
-- **Arkaya toz.** Sürgü açılırken bir tutam toz kabın arkasından düşer. Ürünün
-  yapısal özelliği; menteşeli versiyonda yoktu, karşılığında altta 13 mm'lik kutu
-  vardı. Sizin tercihiniz buydu ve bence doğru tercih.
-- **Kanallara toz.** Plaka kanallarda kaydığı için toz girer; kanallar arkaya açık,
-  çoğu dökülür. Haftada bir fırçalayın.
+- **Kanallara toz.** Plaka kanallarda kaydığı için daldırırken toz girer; kanallar
+  arkaya açık, çoğu dökülür. O-ring'in dış tarafında kaldığı için kaba/çantaya
+  geçmez. Haftada bir fırçalayın.
+- **O-ring ömrü.** Nitril O-ring her kullanımda plaka altında sürtünür; yılda bir
+  değiştirin (kuruş maliyet). Silikon O-ring daha uzun ömürlü ama daha çok sürter.
 - **Çantada üzengi.** Sap sökülse de üzengi plakaya bağlı olduğu için kabın
   üstünde 30 mm dik durur; kap çantada yassı bir puk değil, üzengili bir puk.
   Katlanır üzengi mümkün ama bir menteşe daha demek; istemedim.
