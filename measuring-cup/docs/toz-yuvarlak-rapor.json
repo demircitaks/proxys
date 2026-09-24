@@ -68,27 +68,34 @@
     "DET_R": 0.35,
     "HANDLE_W": 12.0,
     "HANDLE_H": 8.0,
-    "HANDLE_Z0": 0.5
+    "FUN_GAP": 0.6,
+    "FUN_TOP_RO": 24.6,
+    "FUN_WALL": 1.4,
+    "SPOUT_D": 20.8,
+    "SPOUT_L": 7.0,
+    "FIN_A0": 35.0,
+    "FIN_A1": 145.0,
+    "FIN_RO": 26.5
   },
   "parcalar": [
     {
       "dosya": "01-hazne-15ml.stl",
-      "not_": "Baski: AGIZ YUKARI, oturma yuzu tablada. Destek yok.",
-      "hacim_cm3": 14.15,
+      "not_": "Baski: AGIZ TABLADA (ters), huni yukari. Destek yok.",
+      "hacim_cm3": 18.62,
       "olcu_mm": [
         149.2,
-        48.0,
-        12.2
+        51.1,
+        36.5
       ]
     },
     {
       "dosya": "01-hazne-30ml.stl",
-      "not_": "Baski: AGIZ YUKARI.",
-      "hacim_cm3": 20.49,
+      "not_": "Baski: AGIZ TABLADA (ters), huni yukari.",
+      "hacim_cm3": 25.0,
       "olcu_mm": [
         150.5,
-        50.2,
-        22.9
+        51.6,
+        47.2
       ]
     },
     {
@@ -142,17 +149,7 @@
       ]
     },
     {
-      "dosya": "05-huni-pet-vidali.stl",
-      "not_": "Opsiyonel. Baski: AGIZ TABLADA.",
-      "hacim_cm3": 14.93,
-      "olcu_mm": [
-        55.6,
-        55.6,
-        39.4
-      ]
-    },
-    {
-      "dosya": "06-conta-tpu.stl",
+      "dosya": "05-conta-tpu.stl",
       "not_": "Opsiyonel: O-ring yoksa TPU.",
       "hacim_cm3": 0.3,
       "olcu_mm": [
@@ -166,26 +163,27 @@
     "15 mL": {
       "alt_disk_donus_mm3": 0.395,
       "ust_disk_donus_mm3": 0.396,
-      "alt_disk_huni_mm3": 0.0,
       "diskler_arasi_mm3": 0.0,
       "kapali_tirnak_alt_mm3": 0.0,
-      "kapali_tirnak_ust_mm3": 0.0,
-      "huni_hazne_mm3": 0.0
+      "kapali_tirnak_ust_mm3": 0.0
     },
     "30 mL": {
       "alt_disk_donus_mm3": 0.395,
       "ust_disk_donus_mm3": 0.385,
-      "alt_disk_huni_mm3": 0.0,
       "diskler_arasi_mm3": 0.0,
       "kapali_tirnak_alt_mm3": 0.0,
-      "kapali_tirnak_ust_mm3": 0.0,
-      "huni_hazne_mm3": 0.0
+      "kapali_tirnak_ust_mm3": 0.0
     },
     "baski_cikintilari": {
-      "hazne": {
-        "sorunlu_mm2": 791.4,
-        "yuzde": 9.39,
-        "koprü_mm2": 783.1
+      "hazne_15": {
+        "sorunlu_mm2": 447.5,
+        "yuzde": 3.11,
+        "koprü_mm2": 343.3
+      },
+      "hazne_30": {
+        "sorunlu_mm2": 476.4,
+        "yuzde": 2.68,
+        "koprü_mm2": 343.8
       },
       "alt_disk": {
         "sorunlu_mm2": 43.6,
@@ -201,11 +199,6 @@
         "sorunlu_mm2": 0.0,
         "yuzde": 0.0,
         "koprü_mm2": 0.0
-      },
-      "huni": {
-        "sorunlu_mm2": 446.3,
-        "yuzde": 3.94,
-        "koprü_mm2": 222.0
       }
     },
     "kalibrasyon": [

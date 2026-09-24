@@ -5,8 +5,11 @@ etrafinda yana DONER.  Ray, kanal, kizak yok; silüet bastan sona yuvarlak.
 - Alt disk tabandir; iki on tirnagi flansin kenarina klik yapar ve diski
   O-ring'e ceker.  Acmak icin diski sapin altina dogru cevirirsiniz.
 - Ikisi de ayni mile takilir; mil alttan surulur, ustte tirnakla tutunur.
+- Haznenin alti hafif HUNI: 45 derecelik koni, ucu PCO-1881 pet sise
+  agzina giren Ø20.8 boru.  Alt disk huninin ustundeki yariktan yana kayar;
+  huni govdeye +y tarafindaki kanatla baglidir (diskin supurmedigi taraf).
 z = 0 alt diskin ust yuzu (taban); z = h ust diskin alt yuzu (agiz).
-Baski: hazne AGIZ YUKARI, oturma yuzeyi TABLADA (tam duz).
+Baski: hazne AGIZ TABLADA (ters), huni yukari; koni her iki yonde 45 derece.
 """
 import numpy as np
 import trimesh
@@ -42,7 +45,17 @@ P.update(dict(
     HANDLE_L    = 86.0,
     HANDLE_W    = 12.0,
     HANDLE_H    = 8.0,
-    HANDLE_Z0   = 0.5,    # alt diskin kulagi altindan gecer
+    # sapin ust yuzu agiz duzlemindedir (z = h): ters baskida tablaya oturur,
+    # ust disk uzerinden kayar; alt diskin kulagi altindan gecer.
+    # huni (govdenin alti)
+    FUN_GAP     = 0.6,    # alt diskin alti ile huni ust halkasi arasi
+    FUN_TOP_RO  = 24.6,   # huni ust halkasi dis yaricap (flans + kilit yuvasi ile ayni)
+    FUN_WALL    = 1.4,
+    SPOUT_D     = 20.8,   # PCO-1881 ic capi 21.74 -> 0.47 mm/yan bosluk
+    SPOUT_L     = 7.0,    # boynun icine giren duz kisim
+    FIN_A0      = 35.0,   # baglanti kanadi (+y tarafi), acisal araligi
+    FIN_A1      = 145.0,
+    FIN_RO      = 26.5,
 ))
 SIZES = B.SIZES
 cup_depth, _r_at, brim_volume, report = B.cup_depth, B._r_at, B.brim_volume, B.report
@@ -63,8 +76,8 @@ def _disc_plan(r_disc, p=P):
 # ===========================================================================
 # HAZNE (+ sap, gobek)
 # ===========================================================================
-def _handle(p=P):
-    w, hh, z0 = p["HANDLE_W"], p["HANDLE_H"], p["HANDLE_Z0"]
+def _handle(p, z0):
+    w, hh = p["HANDLE_W"], p["HANDLE_H"]
     c = hh / 2 - 1.0
     hexa = Polygon([(-w / 2 + c, 0), (w / 2 - c, 0), (w / 2, c), (w / 2, hh - c),
                     (w / 2 - c, hh), (-w / 2 + c, hh), (-w / 2, hh - c), (-w / 2, c)])
@@ -103,9 +116,6 @@ def _tab_sweep(size, p, which):
         a = f * p["LOCK_DEG"]
         extra = p["LOCK_WEDGE"] * f          # girise dogru (buyuk aci) daha bol
         t = _tab_solid(size, p, which, grow=p["FIT"] / 2)
-        if which == "bottom":
-            t = g.union(t, g.extrude(sbox(-60, -60, 60, 60), p["TAB_H"] + p["FIT"] / 2, p["TAB_H"] + p["FIT"] / 2 + extra)
-                        .apply_translation((0, 0, 0)) if False else t)
         # kama: tavani extra kadar yukselt (alt) / alcalt (ust)
         zt = p["TAB_H"] + p["FIT"] / 2 + extra if which == "bottom" else None
         m = t.copy()
@@ -116,6 +126,30 @@ def _tab_sweep(size, p, which):
         m.apply_transform(trimesh.transformations.rotation_matrix(np.radians(sgn * a), ad, ax))
         parts.append(m)
     return g.union(*parts)
+
+
+def _funnel(p):
+    """Govdenin altindaki huni + onu flansa baglayan kanat.
+    Ust halka z = -(DISC_T+FUN_GAP)'de; alt disk halka ile flans arasindaki
+    yariktan yana kayar.  Kanat +y tarafinda (disk -y'ye dogru acilir)."""
+    zt = -(p["DISC_T"] + p["FUN_GAP"])
+    ro, w = p["FUN_TOP_RO"], p["FUN_WALL"]
+    r_sp = p["SPOUT_D"] / 2
+    ri = ro - w * np.sqrt(2.0)                     # 45 derecelik cidar, normal kalinlik w
+    z_co = zt - (ro - r_sp)                        # dis koninin bittigi z
+    z_ci = zt - (ri - (r_sp - w))
+    z_end = z_co - p["SPOUT_L"]
+    fun = g.revolve([(r_sp - w, z_end), (r_sp, z_end), (r_sp, z_co), (ro, zt), (ri, zt),
+                     (r_sp - w, z_ci)])
+    # kanat (r,z profili): ustte flansa 45 derece pahla biner, altta huni
+    # cidarinin icine (ic koni cizgisinin 0.3 mm disinda) kadar iner
+    fr = p["FIN_RO"]
+    zb = zt - 2.9
+    fin = g.revolve([(p["FLANGE_R"] - 1.0, 2.5), (p["FLANGE_R"], 2.5), (fr, 0.0), (fr, zb),
+                     (ri - (zt - zb) + 0.8, zb), (ri + 0.3, zt), (p["FLANGE_R"] - 1.0, zt)])
+    fin = g.inter(fin, g.sector(0, fr + 1, p["FIN_A0"], p["FIN_A1"], zb - 1, 5))
+    fin = g.diff(fin, g.cyl(p["FLANGE_R"] + p["FIT"], zt, 0.5))                 # diskin yarigi
+    return g.union(fun, fin)
 
 
 def _lock_housing(size, p):
@@ -167,14 +201,13 @@ def build_body(size, p=P):
         (r_rim + w + p["LID_BEAD"], h - p["LID_BEAD_Z"] - 0.3),
         (r_rim + w, h - p["LID_BEAD_Z"] - 1.2),
         (p["FLANGE_R"], p["FLANGE_T"] + (p["FLANGE_R"] - p["BORE"] / 2 - w)),   # 45 der.
-        (p["FLANGE_R"], 1.7), (p["FLANGE_R"] - 0.5, 1.2), (p["FLANGE_R"], 0.7),  # huni yuvasi
         (p["FLANGE_R"], 0.0),
     ]
-    body = g.revolve(prof)
+    body = g.union(g.revolve(prof), _funnel(p))
     # mil gobegi: z 0 .. h (ust kapak bunun ustune oturur), sap kokuyle birlesir
     boss = g.cyl(p["BOSS_R"], 0.0, h).apply_translation((p["PIVOT_X"], 0, 0))
     neck = g.extrude(sbox(p["FLANGE_R"] - 3.0, -p["BOSS_R"], p["PIVOT_X"], p["BOSS_R"]), 0.0, h)
-    body = g.union(body, boss, neck, _handle(p))
+    body = g.union(body, boss, neck, _handle(p, h - p["HANDLE_H"]))
     # mil deligi
     body = g.diff(body, g.cyl(p["PIN_D"] / 2 + p["FIT"] / 2, -5, h + 20).apply_translation((p["PIVOT_X"], 0, 0)))
     # O-ring yuvasi (oturma yuzeyinde)
@@ -239,28 +272,6 @@ def build_pin(size, p=P):
     pin = g.revolve(prof)
     slot = g.box(-0.6, 0.6, -10, 10, L - 5.0, L + 1)
     return g.diff(pin, slot)
-
-
-def bottom_sweep(p=P, steps=48, grow=0.6):
-    """Alt diskin 0..OPEN_DEG boyunca supurdugu hacim (bosluk payli).
-    Tirnak da buyutulur; adim 150/48 ~ 3 derece (tirnak ucunda ~1.3 mm)."""
-    ax, ad = pivot_axis(p)
-    d = build_bottom(p)
-    d = g.union(d, g.extrude(_disc_plan(p["FLANGE_R"] + grow, p), -p["DISC_T"] - grow, grow),
-                _tab_solid(15, p, "bottom", grow=grow))
-    parts = []
-    for a in np.linspace(0.0, p["OPEN_DEG"], steps):
-        m = d.copy(); m.apply_transform(trimesh.transformations.rotation_matrix(np.radians(a), ad, ax)); parts.append(m)
-    return g.union(*parts)
-
-
-def build_funnel(p=P):
-    """Vidali huni; bilezigi alt diskin donus yolundan oyulmus (on tarafta besik).
-    Onde kilit yuvasinin kalinlastirdigi flans (r FLANGE_R+0.6) icin bilezigin
-    ic yuzu de o yayda FIT kadar geri alinir."""
-    fun = g.diff(B.build_funnel(p), bottom_sweep(p))
-    fl = g.sector(0, p["FLANGE_R"] + 0.6 + p["FIT"] / 2, 180 - 36 - 2, 180 + 36 + 2, -0.5, p["TAB_H"] + 1.5 + p["FIT"])
-    return g.diff(fun, fl)
 
 
 build_gasket = B.build_gasket
