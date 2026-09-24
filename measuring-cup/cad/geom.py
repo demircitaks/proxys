@@ -229,3 +229,43 @@ def emboss_text(s, size_mm, depth, radius, z_center, arc_center_deg=0.0):
     flat.fix_normals()
     return wrap_on_cylinder(flat, radius, z_center, arc_center_deg,
                             x_center=(maxx - minx) / 2.0)
+
+
+# --------------------------------------------------------------------------
+# tutamak / serbest bicimli govdeler
+# --------------------------------------------------------------------------
+def hull(*meshes):
+    """Verilen katilarin disbukey kabugu (sap, kol, gecis parcalari icin)."""
+    ms = [m for m in meshes if m is not None]
+    return trimesh.util.concatenate(ms).convex_hull if len(ms) > 1 else ms[0].convex_hull
+
+
+def stadium(x0, y0, x1, y1, r, resolution=24):
+    """Iki ucu yuvarlatilmis dikdortgen (kapsul) poligonu -- sap kesiti."""
+    from shapely.geometry import LineString
+    return LineString([(x0, y0), (x1, y1)]).buffer(r, resolution=resolution)
+
+
+def loft(sections, cap=True):
+    """Sirali (poligon, z) kesitlerini tek bir katiya baglar.
+
+    Tum kesitler ayni kose sayisina yeniden orneklendigi icin poligonlarin
+    ayni topolojide (tek halka, deliksiz) olmasi gerekir.
+    """
+    import numpy as _np
+    rings = []
+    n = 96
+    for poly, z in sections:
+        ring = _np.asarray(poly.exterior.coords[:-1], dtype=float)
+        # cevre boyunca esit araliklarla yeniden ornekle
+        seg = _np.linalg.norm(_np.roll(ring, -1, axis=0) - ring, axis=1)
+        s = _np.concatenate([[0.0], _np.cumsum(seg)])
+        t = _np.linspace(0.0, s[-1], n, endpoint=False)
+        pts = _np.column_stack([_np.interp(t, s, _np.append(ring[:, 0], ring[0, 0])),
+                                _np.interp(t, s, _np.append(ring[:, 1], ring[0, 1]))])
+        rings.append(_np.column_stack([pts, _np.full(n, float(z))]))
+    return sweep_rings(rings) if cap else sweep_rings(rings)
+
+
+def cross_section_area(poly):
+    return float(poly.area)
