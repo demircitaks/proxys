@@ -128,9 +128,14 @@ def sweep_rings(rings):
 # boolean islemler
 # --------------------------------------------------------------------------
 def _check(m, tag):
+    if len(m.faces) == 0:
+        return m                       # bos kesisim: carpisma yok
     if not m.is_volume:
-        m.fix_normals()
-        m.fill_holes()
+        try:
+            m.fix_normals()
+            m.fill_holes()
+        except Exception:
+            pass
     return m
 
 

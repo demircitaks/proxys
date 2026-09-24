@@ -50,3 +50,50 @@ def swept_envelope_depth(moving, axis_point, axis_dir, angles):
     for a in angles:
         lo = min(lo, float(rotate_about(moving, axis_point, axis_dir, a).bounds[0][2]))
     return lo
+
+
+# --------------------------------------------------------------------------
+# baski yonu dogrulamasi
+# --------------------------------------------------------------------------
+def overhang_report(mesh, limit_deg=45.0, bridge_span=6.0):
+    """Verilen baski yonunde (mesh'in +Z'si baski yonu) desteksiz basilamayacak
+    yuzey alanini olcer.
+
+    Asagi bakan bir yuzun egimi dikeyden `limit_deg`'i asiyorsa problemlidir.
+    Neredeyse yatay yuzler (koprü olabilecekler) ayri raporlanir; bunlarin
+    kisa acikliklari dilimleyici koprü olarak basar.
+    """
+    n = mesh.face_normals
+    a = mesh.area_faces
+    # tabla duzlemindeki yuzler baski yuzeyidir, cikinti degildir
+    zmin = mesh.bounds[0][2]
+    fz = mesh.vertices[mesh.faces][:, :, 2].max(axis=1)
+    on_bed = fz <= zmin + 0.3
+    down = (n[:, 2] < 0) & (~on_bed)
+    # yuzun dikeyden sapmasi: normalin -Z ile acisi
+    with np.errstate(invalid="ignore"):
+        tilt = np.degrees(np.arccos(np.clip(-n[:, 2], -1.0, 1.0)))
+    steep = down & (tilt < (90.0 - limit_deg))        # dikeyden > limit egimli
+    flat = down & (tilt < 8.0)                        # neredeyse yatay tavan
+    total_down = float(a[down].sum())
+    return dict(
+        toplam_alan=float(a.sum()),
+        asagi_bakan=total_down,
+        sorunlu_alan=float(a[steep].sum()),
+        yatay_tavan=float(a[flat].sum()),
+        sorunlu_oran=float(a[steep].sum() / max(a.sum(), 1e-9)),
+        en_kotu_egim=float((90.0 - tilt[down]).max()) if down.any() else 0.0,
+    )
+
+
+def steep_faces_bbox(mesh, limit_deg=45.0):
+    """Sorunlu yuzlerin nerede toplandigini gosterir."""
+    n = mesh.face_normals
+    tilt = np.degrees(np.arccos(np.clip(-n[:, 2], -1.0, 1.0)))
+    zmin = mesh.bounds[0][2]
+    fz = mesh.vertices[mesh.faces][:, :, 2].max(axis=1)
+    steep = (n[:, 2] < 0) & (fz > zmin + 0.3) & (tilt < (90.0 - limit_deg))
+    if not steep.any():
+        return None
+    v = mesh.vertices[mesh.faces[steep].reshape(-1)]
+    return np.vstack([v.min(axis=0), v.max(axis=0)])
