@@ -24,8 +24,24 @@ P = dict(
     FLANGE_R    = 24.0,   # alt flans (oturma bilezigi + kanal duvarlari)
     FLANGE_T    = 2.4,
     BAND_R      = 24.2,   # sap bileziginin kavradigi band
-    BAND_Z0     = 3.0,
-    BAND_Z1     = 8.0,
+    BAND_Z0     = 2.8,    # alcak tutuldu: 15 mL kabinda ustte KAPAK icin yer kalsin
+    BAND_Z1     = 6.2,
+
+    # --- ust kapak (saklama) ----------------------------------------------
+    LID_BEAD    = 0.7,    # agzin altindaki kilit boncugu (radyal)
+    LID_BEAD_Z  = 3.0,    # agizdan asagi mesafesi (merkez)
+    LID_SKIRT   = 4.6,    # kapak etegi boyu
+    LID_T       = 2.0,
+    LID_PLUG    = 1.8,    # kabin icine giren sizdirmazlik halkasi boyu
+
+    # --- pet sise disi (PCO-1881 / 1810) ----------------------------------
+    THR_PITCH   = 2.7,
+    THR_TURNS   = 1.6,
+    THR_SKIRT_ID= 28.6,   # kapak etegi ic capi (sise dis crest 27.43)
+    THR_CREST_D = 25.9,   # dis sirtinin ic capi (sise kok 24.94 ile crest arasi)
+    THR_H       = 1.4,    # dis sirti eksenel kalinligi
+    CAP_H       = 12.0,   # dis bolgesi yuksekligi
+    VENT_N      = 4,
     PLATE_T     = 2.0,
     PLATE_HW    = 19.4,   # plakanin yari genisligi (duz kenarlar)
     GROOVE_LIP  = 1.8,    # kanal dudaginin plaka altina giren genisligi
@@ -58,11 +74,8 @@ P = dict(
 
     # --- huni (15 mL / pet sise) ------------------------------------------
     FUN_MOUTH   = 52.0,
-    FUN_THROAT_O= 20.4,
-    FUN_THROAT_I= 18.8,
-    FUN_TUBE_L  = 15.0,
+    FUN_OUT_D   = 21.0,   # huninin sise agzina bakan cikisi (sise kovani 21.74)
     FUN_CONE_A  = 35.0,
-    FUN_SEAT_N  = 3,
 )
 SIZES = (15, 30)
 
@@ -100,14 +113,21 @@ def body_profile(size, p=P):
     h = cup_depth(size, p)
     rb, w = p["BORE"] / 2.0, p["WALL"]
     r_rim = _r_at(h, p)
+    d45 = p["BAND_R"] - (_r_at(p["BAND_Z1"], p) + w)           # 45 derece icin yukseklik
     return [
         (rb, 0.0),
         (r_rim, h),
         (r_rim + w - p["RIM_CHAM"], h),
         (r_rim + w, h - p["RIM_CHAM"]),
-        (p["BAND_R"], p["BAND_Z1"] + (p["BAND_R"] - _r_at(p["BAND_Z1"], p) - w)),  # 45 der.
+        (r_rim + w, h - p["LID_BEAD_Z"] + 0.5),                     # kapak boncugu
+        (r_rim + w + p["LID_BEAD"], h - p["LID_BEAD_Z"] - 0.2),      # (45 derece flanklar)
+        (r_rim + w, h - p["LID_BEAD_Z"] - 0.9),
+        (_r_at(p["BAND_Z1"] + d45, p) + w, p["BAND_Z1"] + d45),   # 45 derece donus
+        (p["BAND_R"], p["BAND_Z1"]),                                # sap bandi ustu
         (p["BAND_R"], p["BAND_Z0"]),
         (p["FLANGE_R"], p["BAND_Z0"] - 0.3),
+        (p["FLANGE_R"], 1.7), (p["FLANGE_R"] - 0.5, 1.2),          # huni klik yuvasi (V)
+        (p["FLANGE_R"], 0.7),
         (p["FLANGE_R"], 0.0),
     ]
 
@@ -204,7 +224,11 @@ def build_handle(p=P):
     r_o = r_i + p["COLLAR_T"]
     z0, z1 = p["BAND_Z0"] - 0.1, p["BAND_Z1"] + 1.4
     collar = g.tube(r_i, r_o, z0, z1)
-    neck = g.extrude(sbox(r_i - 1.0, -p["NECK_HW"], p["NECK_X1"], p["NECK_HW"]), z0, p["NECK_TOP"])
+    # kabin hemen yaninda alcak (ust kapagin etegi buradan gecer), sonra 70 derece rampa ile yukselir
+    neck_low = g.extrude(sbox(r_i - 1.0, -p["NECK_HW"], 30.0, p["NECK_HW"]), z0, z1)
+    neck_hi = g.hull(g.extrude(sbox(28.5, -p["NECK_HW"], 29.5, p["NECK_HW"]), z0, z1),
+                     g.extrude(sbox(34.0, -p["NECK_HW"], p["NECK_X1"], p["NECK_HW"]), z0, p["NECK_TOP"]))
+    neck = g.union(neck_low, neck_hi)
     L = p["HANDLE_L"]
     x0, x1 = p["NECK_X1"] - 2.0, p["NECK_X1"] + L
     pts = []
@@ -234,35 +258,94 @@ def build_handle(p=P):
 # ===========================================================================
 # PARCA 4 -- HUNI (kisa: altta sarkan bir sey yok)
 # ===========================================================================
+def _thread_ridge(r_crest, r_root, pitch, turns, z0, h_axial, segments=40):
+    """Ic dis sirti: kok r_root'tan (etek ici) crest r_crest'e inen, 45 derece
+    flankli yamuk kesit, helis boyunca supurulur.  Baskida agiz asagi
+    yonunde flanklar 45 derece oldugu icin destek istemez."""
+    steps = int(segments * turns)
+    rings = []
+    depth = r_root - r_crest
+    for i in range(steps + 1):
+        t = 2 * np.pi * turns * i / steps
+        z = z0 + pitch * t / (2 * np.pi)
+        ca, sa = np.cos(t), np.sin(t)
+        sec = [(r_root + 0.3, -h_axial / 2 - depth), (r_crest, -h_axial / 2),
+               (r_crest, h_axial / 2), (r_root + 0.3, h_axial / 2 + depth)]
+        rings.append([(r * ca, r * sa, z + dz) for r, dz in sec])
+    return g.sweep_rings(rings)
+
+
 def build_funnel(p=P):
-    """Kisa huni.  Agzi kepcenin en alt duzleminde (kanal dudaklari, z_bot);
-    disaridan saran alcak bir bilezik kepcenin flansini merkezler.  Plaka bu
-    duzlemin USTUNDE kaydigi icin huniye hic degmez; sap tarafinda bilezik
-    plakanin gectigi genislikte aciktir."""
+    """Pet siseye VIDALANAN huni.  Alt kismi PCO-1881 kapagi (dis + hava
+    yariklari), ust kismi 35 derecelik koni; agzinda kepcenin flansina
+    klik diye gecen bilezik.  Sap tarafinda bilezik aciktir (plaka gecer)."""
     z_bot = -(p["PLATE_T"] + p["FIT"] + p["LIP_T"])           # kepcenin alti
     r_m = p["FUN_MOUTH"] / 2
-    r_to, r_ti = p["FUN_THROAT_O"] / 2, p["FUN_THROAT_I"] / 2
+    r_out = p["FUN_OUT_D"] / 2
     wall = 1.8
     tan_c = np.tan(np.radians(p["FUN_CONE_A"]))
-    z_th = z_bot - (r_m - r_ti) / tan_c
-    z_tip = z_th - p["FUN_TUBE_L"]
-    r_col = p["FLANGE_R"] + 0.6                              # bilezik ic yaricapi
-    prof = [(r_ti, z_tip), (r_ti, z_th), (r_m, z_bot),
-            (r_col + wall + 1.2, z_bot), (r_col + wall + 1.2, z_bot - 3.0),
-            (r_m + wall, z_bot - 3.0 - (r_m + wall - r_col - wall - 1.2) * 0.0),
-            (r_to, z_th), (r_to, z_tip + 2.0), (r_ti + 0.5, z_tip)]
+    z_cone = z_bot - (r_m - r_out) / tan_c                    # koninin alt ucu = kapak tavani
+    r_sk = p["THR_SKIRT_ID"] / 2
+    r_ko = r_sk + 2.2                                          # kapak etegi dis yaricapi
+    z_cap = z_cone - p["CAP_H"]
+    prof = [(r_out, z_cap + 2.0), (r_out, z_cone), (r_m, z_bot),
+            (r_m + wall, z_bot), (r_ko, z_cone + 0.0 - (r_m + wall - r_ko) * 0.0),
+            (r_ko, z_cap), (r_sk, z_cap), (r_sk, z_cone - 2.0), (r_out, z_cone - 2.0)]
+    # basit ve saglam: koni (ic/dis), altina silindirik kapak etegi
+    prof = [(r_out, z_cone - 2.0), (r_out, z_cone), (r_m, z_bot), (r_m + wall, z_bot),
+            (r_ko, z_cone), (r_ko, z_cap), (r_sk, z_cap), (r_sk, z_cone - 2.0)]
     fun = g.revolve(prof)
-    # merkezleme bilezigi: kepcenin flansini disaridan sarar, plaka duzleminin altinda kalir
-    ring = g.tube(r_col, r_col + wall + 1.2, z_bot, 0.0 - 0.6)
+    # sise agzinin kapak tavanina yaslandigi 3 ped (aralari hava yolu)
+    pads = [g.inter(g.tube(r_out - 0.1, r_sk + 0.1, z_cone - 2.0 - 1.2, z_cone - 2.0),
+                    g.sector(0, 20, 120 * i - 20, 120 * i + 20, z_cap, 0))
+            for i in range(3)]
+    fun = g.union(fun, *pads)
+    # dis sirti
+    ridge = _thread_ridge(p["THR_CREST_D"] / 2, r_sk, p["THR_PITCH"], p["THR_TURNS"],
+                          z_cap + 2.6, p["THR_H"])
+    fun = g.union(fun, g.inter(ridge, g.cyl(r_sk + 0.2, z_cap + 0.8, z_cone - 3.0)))
+    # hava yariklari (etekte dikey, dis boyunca)
+    for i in range(p["VENT_N"]):
+        v = g.box(-0.9, 0.9, r_sk - 3.0, r_ko + 1, z_cap - 1, z_cone - 2.6)
+        fun = g.diff(fun, g.rotz(v, 360.0 * i / p["VENT_N"] + 45.0))
+    # klik bilezik: kepcenin flansini disaridan sarar, ustte boncukla tutar
+    r_col = p["FLANGE_R"] + p["FIT"] / 2
+    col = g.revolve([(r_col, z_bot), (r_col + wall + 1.4, z_bot), (r_col + wall + 1.4, 2.2),
+                     (r_col, 2.2), (r_col, 1.65), (r_col - 0.45, 1.2), (r_col, 0.75)])
     ang = np.degrees(np.arcsin(min(0.99, (p["PLATE_HW"] + 1.0) / r_col)))
-    ring = g.diff(ring, g.sector(0, 40, -ang, ang, z_bot - 1, 1))
-    fun = g.union(fun, ring)
-    seat_ring = g.revolve([(r_to - 0.1, z_th - 2.6), (r_to + 4.2, z_th + 1.6),
-                           (r_to + 4.2, z_th + 2.4), (r_to - 0.1, z_th + 2.4)])
-    seats = [g.inter(seat_ring, g.sector(r_to - 1, r_to + 6, 360.0 * i / p["FUN_SEAT_N"] - 24,
-                                         360.0 * i / p["FUN_SEAT_N"] + 24, z_th - 4, z_th + 4))
-             for i in range(p["FUN_SEAT_N"])]
-    return g.union(fun, *seats)
+    col = g.diff(col, g.sector(0, 40, -ang, ang, z_bot - 1, 3))
+    for a in (90.0, 270.0):                                  # esneme yariklari
+        for sl in (-14.0, 14.0):
+            col = g.diff(col, g.sector(r_col - 1, r_col + 5, a + sl - 0.6, a + sl + 0.6, z_bot - 1, 1.2))
+    return g.union(fun, col)
+
+
+def build_lid(size, p=P):
+    """Ust kapak: agzin ustune gecer, boncuga klik yapar; alttaki halka kabin
+    icine girip toz sizdirmazligi saglar.  Baski: tepe tablada."""
+    h = cup_depth(size, p)
+    r_rim_i = _r_at(h, p)
+    r_rim_o = r_rim_i + p["WALL"]
+    r_sk_i = r_rim_o + p["FIT"] / 2
+    r_sk_o = r_sk_i + 2.2
+    zt = h + p["LID_T"]                                        # tepe ust yuzu
+    zb = h - p["LID_SKIRT"]
+    lid = g.revolve([(0.0, h + 0.15), (r_rim_i - p["FIT"] / 2 - p["LID_PLUG"] * 0.0, h + 0.15),
+                     (0.0, h + 0.15)][:1] + [
+        (0.0, zt), (r_sk_o - 0.6, zt), (r_sk_o, zt - 0.6), (r_sk_o, zb),
+        (r_sk_i, zb), (r_sk_i, h + 0.15), (r_rim_i - p["FIT"] / 2, h + 0.15),
+        (r_rim_i - p["FIT"] / 2 - 0.4, h - p["LID_PLUG"]),     # sizdirmazlik halkasi (hafif konik)
+        (r_rim_i - p["FIT"] / 2 - 1.6, h - p["LID_PLUG"]),
+        (r_rim_i - p["FIT"] / 2 - 1.6, h + 0.15), (0.0, h + 0.15)])
+    # boncuk yuvasi (45 derece V): etegin icinde
+    zc = h - p["LID_BEAD_Z"]
+    bd = p["LID_BEAD"] + 0.25
+    groove = g.revolve([(r_sk_i - 0.1, zc + 0.15 + bd), (r_sk_i + bd, zc + 0.15),
+                        (r_sk_i + bd, zc - 0.15), (r_sk_i - 0.1, zc - 0.15 - bd)])
+    lid = g.diff(lid, groove)
+    for a in range(0, 360, 90):                                # esneme yariklari
+        lid = g.diff(lid, g.sector(r_sk_i - 1, r_sk_o + 1, a + 45 - 0.6, a + 45 + 0.6, zb - 1, zc - 0.6))
+    return lid
 
 
 # ===========================================================================

@@ -7,8 +7,20 @@
     "FLANGE_R": 24.0,
     "FLANGE_T": 2.4,
     "BAND_R": 24.2,
-    "BAND_Z0": 3.0,
-    "BAND_Z1": 8.0,
+    "BAND_Z0": 2.8,
+    "BAND_Z1": 6.2,
+    "LID_BEAD": 0.7,
+    "LID_BEAD_Z": 3.0,
+    "LID_SKIRT": 4.6,
+    "LID_T": 2.0,
+    "LID_PLUG": 1.8,
+    "THR_PITCH": 2.7,
+    "THR_TURNS": 1.6,
+    "THR_SKIRT_ID": 28.6,
+    "THR_CREST_D": 25.9,
+    "THR_H": 1.4,
+    "CAP_H": 12.0,
+    "VENT_N": 4,
     "PLATE_T": 2.0,
     "PLATE_HW": 19.4,
     "GROOVE_LIP": 1.8,
@@ -35,17 +47,14 @@
     "SNAP_N": 2,
     "SNAP_R": 0.9,
     "FUN_MOUTH": 52.0,
-    "FUN_THROAT_O": 20.4,
-    "FUN_THROAT_I": 18.8,
-    "FUN_TUBE_L": 15.0,
-    "FUN_CONE_A": 35.0,
-    "FUN_SEAT_N": 3
+    "FUN_OUT_D": 21.0,
+    "FUN_CONE_A": 35.0
   },
   "parcalar": [
     {
       "dosya": "01-hazne-15ml.stl",
       "not_": "Baski: AGIZ TABLADA.",
-      "hacim_cm3": 7.45,
+      "hacim_cm3": 6.76,
       "olcu_mm": [
         48.4,
         48.4,
@@ -55,10 +64,10 @@
     {
       "dosya": "01-hazne-30ml.stl",
       "not_": "Baski: AGIZ TABLADA.",
-      "hacim_cm3": 12.37,
+      "hacim_cm3": 10.74,
       "olcu_mm": [
-        48.4,
-        48.4,
+        49.8,
+        49.8,
         26.0
       ]
     },
@@ -75,21 +84,41 @@
     {
       "dosya": "03-sap.stl",
       "not_": "Baski: BILEZIK TABLADA. 15/30 mL ortak.",
-      "hacim_cm3": 53.77,
+      "hacim_cm3": 51.32,
       "olcu_mm": [
         171.8,
         55.5,
-        20.1
+        20.3
       ]
     },
     {
-      "dosya": "04-huni-pet.stl",
-      "not_": "Baski: AGIZ TABLADA. 15 mL / pet sise.",
-      "hacim_cm3": 9.17,
+      "dosya": "04-huni-pet-vidali.stl",
+      "not_": "Baski: AGIZ TABLADA. PCO-1881 disli; siseye vidalanir, kepce ustune klik yapar.",
+      "hacim_cm3": 15.71,
       "olcu_mm": [
         55.6,
         55.6,
-        41.2
+        39.4
+      ]
+    },
+    {
+      "dosya": "05-ust-kapak-15ml.stl",
+      "not_": "Baski: TEPE TABLADA.",
+      "hacim_cm3": 5.43,
+      "olcu_mm": [
+        50.5,
+        50.5,
+        6.6
+      ]
+    },
+    {
+      "dosya": "05-ust-kapak-30ml.stl",
+      "not_": "Baski: TEPE TABLADA.",
+      "hacim_cm3": 5.92,
+      "olcu_mm": [
+        53.1,
+        53.1,
+        6.6
       ]
     }
   ],
@@ -100,6 +129,17 @@
     },
     "sap_hazne_mm3": 0.0,
     "huni_hazne_mm3": 0.0,
+    "huni_sap_mm3": 0.0,
+    "kapak_mm3": {
+      "15 mL": {
+        "hazne": 0.0,
+        "sap": 0.0
+      },
+      "30 mL": {
+        "hazne": 0.0,
+        "sap": 0.0
+      }
+    },
     "gozenek": {
       "10 mm": {
         "acik_mm2": 355.8,
@@ -117,7 +157,7 @@
     "baski_cikintilari": {
       "hazne": {
         "sorunlu_mm2": 121.3,
-        "yuzde": 2.42,
+        "yuzde": 2.33,
         "koprü_mm2": 121.3
       },
       "surgu": {
@@ -127,13 +167,18 @@
       },
       "sap": {
         "sorunlu_mm2": 24.9,
-        "yuzde": 0.19,
+        "yuzde": 0.2,
         "koprü_mm2": 8.7
       },
       "huni": {
-        "sorunlu_mm2": 217.0,
-        "yuzde": 2.12,
-        "koprü_mm2": 217.0
+        "sorunlu_mm2": 379.9,
+        "yuzde": 3.24,
+        "koprü_mm2": 155.6
+      },
+      "kapak": {
+        "sorunlu_mm2": 188.2,
+        "yuzde": 3.01,
+        "koprü_mm2": 0.0
       }
     },
     "kalibrasyon": [
