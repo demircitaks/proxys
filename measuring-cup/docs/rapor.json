@@ -1,0 +1,207 @@
+{
+  "parametreler": {
+    "D_CH": 34.0,
+    "WALL": 2.1,
+    "FLOOR_ANGLE": 20.0,
+    "FREEBOARD": 9.0,
+    "D_THROAT": 15.0,
+    "D_SEAT_BOT": 19.0,
+    "D_PLUG": 21.0,
+    "PLUG_LAND": 2.0,
+    "D_GUIDE": 21.4,
+    "Z_GUIDE_BOT": -7.0,
+    "D_LOW_BORE": 26.4,
+    "LIFT": 5.0,
+    "D_STEM": 6.0,
+    "D_SKIRT_O": 36.0,
+    "Z_BOT": -16.0,
+    "LUG_N": 3,
+    "LUG_H": 2.0,
+    "LUG_R": 1.4,
+    "LUG_ARC": 16.0,
+    "LUG_Z": -12.5,
+    "LUG_TWIST": 30.0,
+    "BASE_T": 4.0,
+    "Z_RING_TOP": -2.3,
+    "Z_SHOULDER": -16.25,
+    "Z_RING_BOT": -17.6,
+    "FUNNEL_ANG": 70.0,
+    "CONE_ANGLE": 50.0,
+    "SPOUT_DROP": 29.0,
+    "D_SPOUT_O": 19.0,
+    "D_SPOUT_TIP": 17.4,
+    "D_SPOUT_I": 15.0,
+    "VENT_N": 4,
+    "VENT_W": 3.0,
+    "STAND_WALL": 2.5,
+    "STAND_DEPTH": 34.0,
+    "STAND_GAP": 0.6,
+    "RING_H": 7.0,
+    "RING_T": 3.4,
+    "BAR_GAP": 10.0,
+    "BAR_T": 8.0,
+    "BAR_W": 14.0,
+    "BORE_CL": 0.35,
+    "SPR_SEAT_D": 13.2,
+    "SPR_SEAT_H": 1.5,
+    "SPR_FREE": 13.0,
+    "SPR_REST": 10.0,
+    "SPR_WIRE_R": 1.4,
+    "SPR_WIRE_Z": 2.4,
+    "SPR_MEAN_D": 10.0,
+    "SPR_TURNS": 3.2,
+    "SNAP_R": 0.8,
+    "HEAD_D": 22.0,
+    "HEAD_T": 5.0,
+    "FIT": 0.25,
+    "CHAM": 0.4
+  },
+  "parcalar": [
+    {
+      "dosya": "01-govde-15ml.stl",
+      "tur": "govde",
+      "not_": "Baski yonu: agiz YUKARI. Destek yok, brim onerilir.",
+      "hacim_cm3": 17.87,
+      "olcu_mm": [
+        39.5,
+        39.8,
+        44.0
+      ],
+      "su_gecirmez": true,
+      "yuzey": 8550
+    },
+    {
+      "dosya": "02-platform-mil-15ml.stl",
+      "tur": "platform",
+      "not_": "Baski yonu: DUGME TABANDA (mil yukari). Destek yok, brim sart.",
+      "hacim_cm3": 5.08,
+      "olcu_mm": [
+        22.0,
+        22.0,
+        64.5
+      ],
+      "su_gecirmez": true,
+      "yuzey": 7680
+    },
+    {
+      "dosya": "01-govde-30ml.stl",
+      "tur": "govde",
+      "not_": "Baski yonu: agiz YUKARI. Destek yok, brim onerilir.",
+      "hacim_cm3": 22.01,
+      "olcu_mm": [
+        39.5,
+        39.8,
+        61.1
+      ],
+      "su_gecirmez": true,
+      "yuzey": 8560
+    },
+    {
+      "dosya": "02-platform-mil-30ml.stl",
+      "tur": "platform",
+      "not_": "Baski yonu: DUGME TABANDA (mil yukari). Destek yok, brim sart.",
+      "hacim_cm3": 5.56,
+      "olcu_mm": [
+        22.0,
+        22.0,
+        81.6
+      ],
+      "su_gecirmez": true,
+      "yuzey": 7680
+    },
+    {
+      "dosya": "03-bosaltma-agzi.stl",
+      "tur": "agiz",
+      "not_": "Baski yonu: BORU YUKARI. Destek yok, brim onerilir.",
+      "hacim_cm3": 15.07,
+      "olcu_mm": [
+        44.2,
+        44.2,
+        44.3
+      ],
+      "su_gecirmez": true,
+      "yuzey": 4942
+    },
+    {
+      "dosya": "04-kopru.stl",
+      "tur": "kopru",
+      "not_": "Baski yonu: BILEZIK TABANDA. Destek yok. 15/30 mL ortak.",
+      "hacim_cm3": 6.74,
+      "olcu_mm": [
+        45.5,
+        45.5,
+        24.5
+      ],
+      "su_gecirmez": true,
+      "yuzey": 3582
+    },
+    {
+      "dosya": "05-yay-baskili.stl",
+      "tur": "yay",
+      "not_": "Opsiyonel: metal yay yerine. 0.2 mm katman, 100% dolgu.",
+      "hacim_cm3": 0.34,
+      "olcu_mm": [
+        11.4,
+        11.4,
+        13.0
+      ],
+      "su_gecirmez": true,
+      "yuzey": 716
+    },
+    {
+      "dosya": "06-altlik.stl",
+      "tur": "altlik",
+      "not_": "Opsiyonel: dik durma + damla tutucu. Destek yok.",
+      "hacim_cm3": 19.94,
+      "olcu_mm": [
+        52.4,
+        52.4,
+        36.5
+      ],
+      "su_gecirmez": true,
+      "yuzey": 2976
+    }
+  ],
+  "kalibrasyon": [
+    {
+      "boy_ml": 15,
+      "dolum_yuksekligi_mm": 19.0,
+      "agiz_yuksekligi_mm": 28.0,
+      "olculen_hacim_ml": 15.0,
+      "cizgiler": {
+        "5": 7.63,
+        "10": 13.32,
+        "15": 19.0
+      }
+    },
+    {
+      "boy_ml": 30,
+      "dolum_yuksekligi_mm": 36.05,
+      "agiz_yuksekligi_mm": 45.05,
+      "olculen_hacim_ml": 30.0,
+      "cizgiler": {
+        "10": 13.32,
+        "20": 24.68,
+        "30": 36.05
+      }
+    }
+  ],
+  "girisim_mm3": {
+    "15ml-kapali": {
+      "body|base": 3.29,
+      "body|yoke": 0.347
+    },
+    "15ml-acik": {
+      "body|base": 3.29,
+      "body|yoke": 0.347
+    },
+    "30ml-kapali": {
+      "body|base": 3.29,
+      "body|yoke": 0.347
+    },
+    "30ml-acik": {
+      "body|base": 3.29,
+      "body|yoke": 0.347
+    }
+  }
+}
