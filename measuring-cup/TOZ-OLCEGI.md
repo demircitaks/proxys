@@ -30,8 +30,18 @@ Bu yüzden toz ölçeği ayrı bir takım; sıvı versiyonu `stl/` altında duru
 Kabın **tabanının tamamı** tek bir kapaktır. Menteşe ekseni sızdırmazlık
 düzleminin **içinde** ve gözenek kenarının 2,7 mm dışındadır — bu iki koşul
 birlikte, kapağın hiçbir noktasının dönerken oturma yüzeyine doğru yükselmemesini
-sağlar. Kapağın kuyruğu menteşenin arkasından devam edip sapın altında **tetik
-kaması** olur; kamayı yukarı sıkınca taban aşağı döner.
+sağlar. Kapağın kuyruğu menteşenin arkasından devam edip gövdenin arkasındaki
+**kapalı mekanizma kutusunun** içine girer; kuyruğun düz alt yüzü kutu tabanındaki
+açıklığa **gömme bir düğme** olarak oturur. Düğmeyi yukarı itince taban aşağı döner.
+
+**Alt yüzey kapalı ve düzdür.** Pakete daldırdığınızda tozla temas eden yüzeyler:
+kapağın düz altı, onu saran eteğin düz altı (ikisi aynı düzlemde, arada 0,5 mm
+halka boşluk), kutu tabanı ve düğme (aynı düzlemde, çevresinde 0,5 mm boşluk).
+Menteşe, kuyruk ve yay kutunun içindedir; sapın altında aşağı bakan hiçbir cep
+yoktur. Tetik yalnızca dozu boşaltırken sıkılır, daldırırken değil — o anda
+taban tamamen kapalıdır.
+
+![Alt görünüm](docs/toz-olcegi-alt.png)
 
 Ölçülen değerler (`docs/toz-olcegi-rapor.json`):
 
@@ -39,7 +49,7 @@ kaması** olur; kamayı yukarı sıkınca taban aşağı döner.
 |---|---|
 | Gözenek | **Ø38 mm**, hiçbir daralma yok |
 | 65°'de gerçekten açık | **792 mm²** (gözeneğin %70'i) |
-| Tetik stroku | 17,8 mm |
+| Düğme stroku | 16,3 mm |
 | Kapağın altta süpürdüğü derinlik | 42,5 mm |
 | Çarpışma (tüm strok, her 2,5°) | **0,000 mm³** |
 
@@ -58,8 +68,8 @@ geniştir), böylece doz duvara sürtmeden çıkar; iç köşe yoktur.
 
 | # | Dosya | Baskı yönü | Katı hacim |
 |---|---|---|---|
-| 1 | `stl/toz-olcegi/01-hazne-15ml.stl` · `-30ml.stl` | **Oturma yüzeyi tablada** | 7,9 / 14,4 cm³ |
-| 2 | `stl/toz-olcegi/02-kapak-tetik.stl` | **Sızdırmaz yüz tablada** | 5,6 cm³ |
+| 1 | `stl/toz-olcegi/01-hazne-15ml.stl` · `-30ml.stl` | **Ağız tablada** | 10,6 / 17,1 cm³ |
+| 2 | `stl/toz-olcegi/02-kapak-tetik.stl` | **Sızdırmaz yüz tablada** | 6,2 cm³ |
 | 3 | `stl/toz-olcegi/03-sap.stl` | **Bilezik tablada** | 45,0 cm³ |
 | 4 | `stl/toz-olcegi/04-huni-pet.stl` | **Ağız tablada** | 17,9 cm³ |
 | 5 | `stl/toz-olcegi/05-mentese-mili.stl` | Dik | 0,3 cm³ |
@@ -67,10 +77,12 @@ geniştir), böylece doz duvara sürtmeden çıkar; iç köşe yoktur.
 **2, 3, 4 ve 5 iki boyda ortaktır.** 15 ↔ 30 mL geçmek için sadece hazneyi
 değiştirirsiniz.
 
-Sapın ayrı parça olması keyfî değil: 15 mL haznesi 13,4 mm derinliğinde ve
-sızdırmazlık yüzeyi tablaya bakacak şekilde basılması gerekiyor (o yüzey birinci
-katman kadar düz çıksın diye). Bu yönde ağzın üstüne çıkan hiçbir şey basılamaz —
-yani sap gövdeyle birlikte basılamaz.
+Sapın ayrı parça olması keyfî değil: hazne **ağzı tablada** basılıyor, böylece
+silme kenarı birinci katman kadar keskin çıkıyor ve sızdırmazlık yüzeyi düz,
+ütülenebilir bir üst yüzey oluyor. Mekanizma kutusu ve etek bu yönde yukarı
+doğru büyüdüğü için destek istemiyor. Ama bu yönde ağzın üstüne çıkan hiçbir şey
+basılamaz — 15 mL haznesi yalnızca 13,4 mm — yani sap gövdeyle birlikte
+basılamazdı.
 
 ### Baskıya hazır olduğunun ölçüsü
 
@@ -78,13 +90,15 @@ Her parça kendi baskı yönünde taranıyor; desteksiz basılamayacak yüzey or
 
 | Parça | Sorunlu alan | Bunun köprü olan kısmı |
 |---|---|---|
-| Hazne | %2,4 | 74 mm² |
-| Kapak | %4,4 | 154 mm² |
-| Sap | %4,2 | 225 mm² |
+| Hazne | %7,2 | 357 mm² |
+| Kapak | %4,4 | 158 mm² |
+| Sap | %3,8 | 276 mm² |
 | Huni | %0,8 | 175 mm² |
 
-Kalan alanların neredeyse tamamı iki ucundan tutturulmuş kısa köprülerdir
-(en büyüğü yay tablasının 6,5 mm'lik açıklığı). **Hiçbir parça destek istemez.**
+Kalan alanların neredeyse tamamı iki ucundan tutturulmuş kısa köprülerdir:
+haznede kutu tabanının düğme açıklığı çevresindeki 4–5 mm'lik çerçeve ve etek-kutu
+dolgusu, kapakta
+yay tablasının 6,5 mm'lik açıklığı. **Hiçbir parça destek istemez.**
 
 ## 4. Yay ve mil
 
@@ -97,15 +111,11 @@ yatay tablaya basar.
 | Dış çap | ≤ 8,0 mm |
 | Serbest boy | 30 mm (±3) |
 | Montaj boyu | 24,8 mm |
-| Tam açıkken | 15,4 mm |
+| Tam açıkken | 15,2 mm |
 | Uygun yay sabiti | 0,8 – 1,2 N/mm → tetikte ≈3 N'dan ≈9 N'a yükselen his |
 
 Menteşe mili Ø3 mm. Baskılı mili kullanabilirsiniz; **3 mm paslanmaz çubuk veya
 bir M3 vida** birebir geçer ve daha uzun ömürlüdür.
-
-Yay bulamazsanız menteşe üzerinde bir **burulma yayı** için de yer bırakıldı
-(bobin Ø5 × 5 mm, mil üzerinde, üst bacağı gövdedeki köprüye dayanır) — bir
-mandal yayı bu ölçüye yakındır.
 
 ## 5. Baskı ayarları (Bambu Lab X1C)
 
@@ -117,20 +127,22 @@ mandal yayı bu ölçüye yakındır.
 | Dolgu | %15 gyroid | Sap için %10 yeter, büyük parça |
 | Destek | **Kapalı** | |
 | Brim | Hazne ve kapak için açık | Tabana temas alanları küçük |
-| Ironing | Haznenin **üst** yüzeyleri açık | Ağız kenarı silme için düz olsun |
+| Ironing | Haznenin **üst** yüzeyleri açık | Oturma bileziği (baskıda üstte) düz olsun |
 
 Huninin en üst kısmı (baskıda boru ucu) ince bir halkadır: **minimum katman
 süresini 8–10 s** yapın veya iki huni birden basın, yoksa boğaz sarkar.
 
 ## 6. Montaj
 
-1. Kapağı gövdenin altından yerine tutun, bogumlarla gövdenin yanakları
-   hizalansın.
+1. Kapağı gövdenin altından, kuyruğu kutunun içine girecek şekilde yerine
+   tutun; boğumlar yanaklardaki delikle hizalansın. Düğme kutu tabanındaki
+   açıklığa oturur.
 2. **Mili** yandan itip geçirin. Kapak artık serbestçe dönüyor olmalı.
 3. **Yayı** sapın içindeki cebe düşürün.
 4. Sapı gövdenin üstünden geçirip aşağı bastırın; iki tırnak **"klik"** diye
-   yuvalarına oturur. Yay kuyruğun tablasına oturmuş olur.
-5. Tetiği birkaç kez sıkıp bırakın.
+   yuvalarına oturur. Yay, kutunun üstündeki delikten geçip kuyruğun tablasına
+   oturmuş olur.
+5. Düğmeyi birkaç kez itip bırakın.
 
 Sökme tersi: sapın bileziğini iki yandan hafifçe açıp yukarı çekin, mili itip
 çıkarın. Beş parça da elde yıkanır.
@@ -168,7 +180,9 @@ değiştirir; doz bozulur. Sadece silin.
   türetildi, yani bu **mümkün olan en kısa** huni.
 - **Sızma.** Kapalı kapak düz yüzey teması yapar, conta yoktur. Taşırken bir
   miktar ince toz elenebilir. Sızdırmazlık yüzeyini 600–1000 kum zımparayla
-  hafifçe düzlemek belirgin fark eder.
+  hafifçe düzlemek belirgin fark eder. Kapak çevresindeki 0,5 mm halka boşluğa
+  ve düğme çevresine daldırırken toz girer; ikisi de aşağı açık olduğu için
+  kaldırınca dökülür, cep yapmaz.
 - **Gıda teması.** FDM parçalarının katman aralarına bakteri yerleşir; bu tasarım
   gıda için sertifikalı değildir. Kuru toz için ve sık yıkanmak kaydıyla makul,
   ama bunu bilerek kullanın. **Bulaşık makinesine koymayın** — PETG'nin cam

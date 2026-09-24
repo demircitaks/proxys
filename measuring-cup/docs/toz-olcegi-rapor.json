@@ -7,8 +7,16 @@
     "LAND": 2.5,
     "FLANGE_R": 23.5,
     "FLANGE_T": 2.0,
-    "TONGUE_X": 27.0,
-    "TONGUE_Y": 16.0,
+    "SKIRT_R_I": 22.0,
+    "SKIRT_Z": -3.3,
+    "HOUSE_X0": 23.0,
+    "HOUSE_X1": 42.0,
+    "HOUSE_Y": 15.5,
+    "HOUSE_Z": -13.0,
+    "HOUSE_WALL": 1.6,
+    "BTN_X0": 27.6,
+    "BTN_X1": 36.6,
+    "BTN_Y": 11.0,
     "HINGE_X": 24.2,
     "HATCH_R": 21.5,
     "HATCH_T": 3.0,
@@ -16,27 +24,18 @@
     "KNUCK_Y0": 3.6,
     "PIN_D": 3.0,
     "PIN_LEN": 37.0,
-    "CHEEK_Y0": 13.6,
-    "CHEEK_T": 4.2,
+    "CHEEK_Y0": 13.9,
+    "CHEEK_T": 3.9,
     "CHEEK_TOP": 8.0,
-    "BRIDGE_Z0": 4.2,
-    "BRIDGE_Z1": 8.0,
-    "BRIDGE_Y": 5.0,
     "OPEN_DEG": 65.0,
-    "TAIL_X": 37.5,
-    "TAIL_Z": -9.9,
-    "TAIL_R": 1.9,
     "TAIL_Y": 10.5,
-    "SEAT_X0": 28.0,
+    "BTN_Z": -13.0,
+    "SEAT_X0": 28.5,
     "SEAT_X1": 35.0,
     "SEAT_Z": -4.8,
-    "SEAT_T": 3.5,
     "SPR_D": 8.0,
     "SPR_TOP": 20.0,
     "SPR_FREE": 30.0,
-    "TOR_ID": 3.2,
-    "TOR_OD": 5.0,
-    "TOR_W": 5.0,
     "BAND_R": 23.8,
     "BAND_Z0": 2.0,
     "BAND_Z1": 7.5,
@@ -60,45 +59,45 @@
     {
       "dosya": "01-hazne-15ml.stl",
       "tur": "hazne",
-      "not_": "Baski: OTURMA YUZEYI TABLADA (parca yonu dogru geliyor).",
-      "hacim_cm3": 7.86,
+      "not_": "Baski: AGIZ TABLADA (dosya bu yonde kaydedildi).",
+      "hacim_cm3": 10.55,
       "olcu_mm": [
-        50.8,
+        65.8,
         47.6,
-        13.4
+        26.4
       ]
     },
     {
       "dosya": "01-hazne-30ml.stl",
       "tur": "hazne",
-      "not_": "Baski: OTURMA YUZEYI TABLADA.",
-      "hacim_cm3": 14.36,
+      "not_": "Baski: AGIZ TABLADA.",
+      "hacim_cm3": 17.05,
       "olcu_mm": [
-        50.8,
+        65.8,
         47.6,
-        27.1
+        40.1
       ]
     },
     {
       "dosya": "02-kapak-tetik.stl",
       "tur": "kapak",
       "not_": "Baski: SIZDIRMAZ YUZ TABLADA -> yuzey birinci katman kadar duz olur.",
-      "hacim_cm3": 5.63,
+      "hacim_cm3": 6.2,
       "olcu_mm": [
-        59.0,
+        57.6,
         43.0,
-        11.8
+        13.0
       ]
     },
     {
       "dosya": "03-sap.stl",
       "tur": "sap",
       "not_": "Baski: BILEZIK TABLADA. 15/30 mL ortak.",
-      "hacim_cm3": 45.0,
+      "hacim_cm3": 45.05,
       "olcu_mm": [
         139.1,
         55.1,
-        24.1
+        23.8
       ]
     },
     {
@@ -151,19 +150,19 @@
     "supurme_derinligi_mm": -42.5,
     "baski_cikintilari": {
       "hazne": {
-        "sorunlu_mm2": 119.4,
-        "yuzde": 2.41,
-        "koprü_mm2": 74.4
+        "sorunlu_mm2": 624.8,
+        "yuzde": 7.15,
+        "koprü_mm2": 356.7
       },
       "kapak": {
-        "sorunlu_mm2": 194.1,
-        "yuzde": 4.42,
-        "koprü_mm2": 153.5
+        "sorunlu_mm2": 198.7,
+        "yuzde": 4.39,
+        "koprü_mm2": 158.1
       },
       "sap": {
-        "sorunlu_mm2": 513.6,
-        "yuzde": 4.15,
-        "koprü_mm2": 209.0
+        "sorunlu_mm2": 469.4,
+        "yuzde": 3.84,
+        "koprü_mm2": 276.0
       },
       "huni": {
         "sorunlu_mm2": 174.6,
@@ -188,12 +187,12 @@
       }
     ],
     "yay": {
-      "tabla_yukselisi_mm": 9.39,
+      "tabla_yukselisi_mm": 9.61,
       "montaj_boyu_mm": 24.8,
-      "tam_acikta_mm": 15.4,
+      "tam_acikta_mm": 15.2,
       "serbest_boy_mm": 30.0
     },
-    "tetik_stroku_mm": 17.8,
+    "tetik_stroku_mm": 16.3,
     "doz_kutlesi_g": {
       "15 mL": [
         5.2,

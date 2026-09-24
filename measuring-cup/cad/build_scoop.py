@@ -82,7 +82,7 @@ def verify(p=S.P):
 
     # --- baski yonu --------------------------------------------------------
     oh = {}
-    for nm, m in (("hazne", on_bed(S.build_body(15, p))), ("kapak", on_bed(flip(hatch))),
+    for nm, m in (("hazne", on_bed(flip(S.build_body(15, p)))), ("kapak", on_bed(flip(hatch))),
                   ("sap", on_bed(handle)), ("huni", on_bed(flip(funnel)))):
         r = K.overhang_report(m)
         oh[nm] = dict(sorunlu_mm2=round(r["sorunlu_alan"], 1),
@@ -105,7 +105,7 @@ def verify(p=S.P):
                       tam_acikta_mm=round(p["SPR_TOP"] - z2, 1),
                       serbest_boy_mm=p["SPR_FREE"])
     # --- tetik stroku ------------------------------------------------------
-    r_tip = np.hypot(p["TAIL_X"] - p["HINGE_X"], p["TAIL_Z"])
+    r_tip = np.hypot((p["BTN_X0"] + p["BTN_X1"]) / 2.0 - p["HINGE_X"], p["BTN_Z"])
     out["tetik_stroku_mm"] = round(2 * r_tip * np.sin(np.radians(p["OPEN_DEG"] / 2)), 1)
     # --- doz kutlesi -------------------------------------------------------
     out["doz_kutlesi_g"] = {("%d mL" % v): [round(v * 0.35, 1), round(v * 0.55, 1)]
@@ -117,10 +117,10 @@ def main(render_png=True):
     os.makedirs(STL, exist_ok=True)
     os.makedirs(DOCS, exist_ok=True)
     parts = [
-        ("01-hazne-15ml.stl", on_bed(S.build_body(15)), "hazne",
-         "Baski: OTURMA YUZEYI TABLADA (parca yonu dogru geliyor)."),
-        ("01-hazne-30ml.stl", on_bed(S.build_body(30)), "hazne",
-         "Baski: OTURMA YUZEYI TABLADA."),
+        ("01-hazne-15ml.stl", on_bed(flip(S.build_body(15))), "hazne",
+         "Baski: AGIZ TABLADA (dosya bu yonde kaydedildi)."),
+        ("01-hazne-30ml.stl", on_bed(flip(S.build_body(30))), "hazne",
+         "Baski: AGIZ TABLADA."),
         ("02-kapak-tetik.stl", on_bed(flip(S.build_hatch())), "kapak",
          "Baski: SIZDIRMAZ YUZ TABLADA -> yuzey birinci katman kadar duz olur."),
         ("03-sap.stl", on_bed(S.build_handle()), "sap",
@@ -151,13 +151,13 @@ def main(render_png=True):
                           colors=[COL["hazne"], COL["kapak"], COL["sap"], COL["huni"]],
                           elev=22, azim=35)
         body, handle, funnel = S.build_body(15), S.build_handle(), S.build_funnel()
-        for nm, op in (("kapali", False), ("acik", True)):
+        for nm, op, el in (("kapali", False, 18), ("acik", True, 18), ("alt", False, -28)):
             h = S.build_hatch(opened=op)
             asm = trimesh.util.concatenate([paint(body, COL["hazne"]),
                                             paint(h, COL["kapak"]),
                                             paint(handle, COL["sap"])])
             render.render(asm, os.path.join(DOCS, "toz-olcegi-%s.png" % nm),
-                          size=760, elev=18, azim=42, color=None)
+                          size=760, elev=el, azim=42, color=None)
         h = S.build_hatch(opened=True)
         full = trimesh.util.concatenate([paint(body, COL["hazne"]), paint(h, COL["kapak"]),
                                          paint(handle, COL["sap"]),

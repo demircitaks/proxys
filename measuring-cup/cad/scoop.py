@@ -29,12 +29,22 @@ P = dict(
     WALL        = 2.4,
     RIM_CHAM    = 0.6,    # SADECE dis kenar; ic kenar keskin kalir (silme icin)
 
-    # --- oturma yuzeyi / flans -------------------------------------------
+    # --- oturma yuzeyi / flans / etek ------------------------------------
     LAND        = 2.5,    # duz sizdirmazlik bileziginin genisligi
     FLANGE_R    = 23.5,
     FLANGE_T    = 2.0,
-    TONGUE_X    = 27.0,   # mentesenin oturdugu arka dil
-    TONGUE_Y    = 16.0,
+    SKIRT_R_I   = 22.0,   # kapagin cevresini saran etek (alt yuzey duz olsun)
+    SKIRT_Z     = -3.3,   # etek alti = kapak alti  -> tek duz taban
+
+    # --- mekanizma govdesi: mentese, kuyruk ve yay KAPALI kutu icinde ------
+    HOUSE_X0    = 23.0,
+    HOUSE_X1    = 42.0,
+    HOUSE_Y     = 15.5,
+    HOUSE_Z     = -13.0,  # kutu tabaninin alt yuzu
+    HOUSE_WALL  = 1.6,
+    BTN_X0      = 27.6,   # tabandaki dugme acikligi (kuyrugun duz alt yuzu)
+    BTN_X1      = 36.6,
+    BTN_Y       = 11.0,
 
     # --- kapak + mentese --------------------------------------------------
     HINGE_X     = 24.2,   # mentese ekseni x; z = 0 (sizdirmazlik duzleminde)
@@ -47,34 +57,25 @@ P = dict(
     KNUCK_Y0    = 3.6,    # bogumlarin ic yuzu; ortada yay bobini icin bosluk
     PIN_D       = 3.0,    # mentese mili (baskili veya 3 mm celik cubuk / M3)
     PIN_LEN     = 37.0,
-    CHEEK_Y0    = 13.6,   # mentese yanaklarinin ic yuzu
-    CHEEK_T     = 4.2,
-    CHEEK_TOP   = 8.0,    # yanaklar oturma duzleminin USTUNDE kalir
-    BRIDGE_Z0   = 4.2,    # yay bacaginin dayandigi orta kopru
-    BRIDGE_Z1   = 8.0,
-    BRIDGE_Y    = 5.0,
+    CHEEK_Y0    = 13.9,   # mentese yanaklarinin ic yuzu (= kutu duvari)
+    CHEEK_T     = 3.9,
+    CHEEK_TOP   = 8.0,
     OPEN_DEG    = 65.0,
 
     # --- tetik (kapakla tek parca) ----------------------------------------
     # Tetik yuzeyi, kuyrugun 45 derecelik alt yuzudur: hem parmaga dogru
     # bakar hem de kapak "sizdirmaz yuz TABLADA" basildiginda destek istemez.
-    TAIL_X      = 37.5,   # kuyruk ucunun merkezi (kapali konumda)
-    TAIL_Z      = -9.9,
-    TAIL_R      = 1.9,    # yuvarlak uc yaricapi
-    TAIL_Y      = 10.5,   # kuyrugun yari genisligi
-    SEAT_X0     = 28.0,   # yay tablasi: kuyruk ustundeki YATAY duzlem
+    TAIL_Y      = 10.5,   # kuyrugun (ve dugmenin) yari genisligi
+    BTN_Z       = -13.0,  # dugmenin duz alt yuzu = kutu tabaniyla ayni duzlem
+    SEAT_X0     = 28.5,   # yay tablasi: kuyruk ustundeki YATAY duzlem
     SEAT_X1     = 35.0,
     SEAT_Z      = -4.8,
-    SEAT_T      = 3.5,
 
     # --- yay: sapin icinde basma yayi, kuyruktaki yatay tablaya basar ------
     SPR_D       = 8.0,    # yay dis capi
     SPR_TOP     = 20.0,   # sap icindeki cep tavani (z)
     SPR_FREE    = 30.0,   # serbest boy
-    # Mentese uzerinde bir burulma yayi da kullanilabilsin diye bobin yeri
-    TOR_ID      = 3.2,
-    TOR_OD      = 5.0,
-    TOR_W       = 5.0,
+
 
     # --- sap (AYRI PARCA, iki boyda ortak) --------------------------------
     BAND_R      = 23.8,   # kabin uzerindeki kavrama bandi yaricapi
@@ -170,7 +171,7 @@ def _pin_bore(r, p=P, y0=-40, y1=40):
 # PARCA 1 -- HAZNE  (baski yonu: OTURMA YUZEYI TABLADA)
 # ===========================================================================
 def body_profile(size, p=P):
-    """Kabin (r, z) kesiti.  z=0 oturma duzlemi, yukari dogru 1 derece daralir."""
+    """Kabin (r, z) kesiti.  z=0 oturma duzlemi; etek kapagin cevresini sarar."""
     h = cup_depth(size, p)
     rb, w = p["BORE"] / 2.0, p["WALL"]
     r_rim = _r_at(h, p)
@@ -182,46 +183,62 @@ def body_profile(size, p=P):
         (p["BAND_R"], p["BAND_Z1"]),                 # sap bandinin ustu
         (p["BAND_R"], p["BAND_Z0"]),                 # sap bandi
         (p["FLANGE_R"], p["BAND_Z0"] - 0.3),
-        (p["FLANGE_R"], 0.0),                        # flans = oturma bilezigi
+        (p["FLANGE_R"], p["SKIRT_Z"]),               # etek disi
+        (p["SKIRT_R_I"], p["SKIRT_Z"]),              # etek alti (kapak altiyla duz)
+        (p["SKIRT_R_I"], 0.0),                       # etek ici (kapaga 0.5 bosluk)
     ]
 
 
 def _cheeks(p=P, grow=0.0):
-    """Mentese yanaklari -- tamamen oturma duzleminin USTUNDE kalir, boylece
-    parca 'oturma yuzeyi tablada' yonunde desteksiz basilir."""
+    """Mentese yanaklari = mekanizma kutusunun yan duvarlarinin ust uzantisi."""
     out = []
     for s in (1, -1):
         e = grow
         lo, hi = sorted((s * p["CHEEK_Y0"], s * (p["CHEEK_Y0"] + p["CHEEK_T"])))
         lo, hi = lo - e, hi + e
-        # korbel: z dustukce disa acilir (baskida 45 derece)
         out.append(g.hull(
             g.extrude(sbox(13.0 - e, lo, 21.0 + e, hi), -e, 1.0),
-            g.extrude(sbox(13.0 - e, lo, p["TONGUE_X"] + e, hi), -e, 1.0),
+            g.extrude(sbox(13.0 - e, lo, p["HOUSE_X1"] + e, hi), -e, 1.0),
             g.extrude(sbox(13.0 - e, lo, 21.0 + e, hi),
                       p["CHEEK_TOP"] - 1.0 + e, p["CHEEK_TOP"] + e)))
     return out
 
 
+def _housing(p=P):
+    """Mentese, kuyruk ve yayi saran kapali kutu.  Alt yuzu duzdur ve
+    ortasinda kuyrugun duz alt yuzunun oturdugu dugme acikligi vardir."""
+    x0, x1, y, z0 = p["HOUSE_X0"], p["HOUSE_X1"], p["HOUSE_Y"], p["HOUSE_Z"]
+    t = p["HOUSE_WALL"]
+    outer = g.extrude(sbox(x0, -y, x1, y), z0, p["FLANGE_T"])
+    inner = g.extrude(sbox(x0 - 5.0, -(y - t), x1 - t, y - t), z0 + t, p["FLANGE_T"] + 1)
+    box = g.diff(outer, inner)
+    # on duvar: kapagin salinim bolgesinin altinda kalan kisim kapali; kapagin
+    # gercekten ihtiyac duydugu kadari hatch_sweep tarafindan sonradan oyulur
+    front = g.extrude(sbox(x0, -y, x0 + t, y), z0, p["SKIRT_Z"])
+    # yuvarlak etek ile duz kutu arasindaki hilal bosluğu doldur (kapagin
+    # kapali konumu ve salinim yolu disinda): alt yuzeyde yarik kalmasin
+    fill = g.diff(g.extrude(sbox(17.0, -y, x0 + t, y), p["SKIRT_Z"], p["FLANGE_T"]),
+                  g.cyl(p["SKIRT_R_I"], p["SKIRT_Z"] - 0.1, 0.1))
+    box = g.union(box, front, fill)
+    # taban: dugme acikligi (kuyruk buraya 0.5 mm bosluklu oturur)
+    btn = g.extrude(sbox(p["BTN_X0"], -p["BTN_Y"], p["BTN_X1"], p["BTN_Y"]),
+                    z0 - 1.0, z0 + t + 0.5)
+    # ust: yayin sapa gectigi delik
+    xs = (p["SEAT_X0"] + p["SEAT_X1"]) / 2.0
+    hole = g.cyl(p["SPR_D"] / 2 + 0.6, -1.0, p["FLANGE_T"] + 1.0)
+    hole.apply_translation((xs, 0.0, 0.0))
+    return g.diff(box, btn, hole)
+
+
 def build_body(size, p=P):
+    """Baski yonu: AGIZ TABLADA.  Boylece silme kenari birinci katman kadar
+    keskin cikar, oturma bilezigi utulenebilir ust yuzey olur ve kutu ile etek
+    (z < 0) baskida yukari dogru buyudugu icin destek istemez."""
     h = cup_depth(size, p)
     body = g.revolve(body_profile(size, p))
-    body = g.union(body, *_cheeks(p))
+    body = g.union(body, *_cheeks(p), _housing(p))
 
-    # burulma yayinin ust bacaginin dayandigi orta kopru
-    bridge = g.extrude(sbox(p["HINGE_X"] - 3.0, -p["BRIDGE_Y"],
-                            p["HINGE_X"] + 2.4, p["BRIDGE_Y"]),
-                       p["BRIDGE_Z0"], p["BRIDGE_Z1"])
-    ramp = g.hull(bridge, g.extrude(sbox(13.0, -p["BRIDGE_Y"], 19.0, p["BRIDGE_Y"]),
-                                    0.0, p["BRIDGE_Z1"]))
-    body = g.union(body, ramp)
-
-    # yay bobininin flansa carpmamasi icin cep (oturma bileziginin disinda)
-    body = g.diff(body, g.extrude(sbox(p["HATCH_R"] + 0.2, -(p["TOR_W"] / 2 + 1.1),
-                                       p["HINGE_X"] + 6.0, p["TOR_W"] / 2 + 1.1),
-                                  -0.1, p["TOR_OD"] / 2 + 0.6))
-
-    # mentese mili deligi (mil disaridan surulur -> tamamen sokulebilir)
+    # mentese mili deligi (mil yandan surulur -> tamamen sokulebilir)
     body = g.diff(body, _pin_bore(p["PIN_D"] / 2 + p["FIT"] / 2, p))
 
     # sap kilitleme cukurlari
@@ -233,8 +250,6 @@ def build_body(size, p=P):
     body = g.diff(body, *pockets)
 
     # --- kapagin supurdugu hacmi EN SONDA oy --------------------------------
-    # Boylece sonradan eklenen hicbir detay (kopru, rampa) kapagin yoluna
-    # giremez; carpisma taramasi bunu olcerek dogruluyor.
     body = g.diff(body, hatch_sweep(p))
 
     # --- olcu hacmini garanti altina al ------------------------------------
@@ -262,14 +277,15 @@ def _hatch_solid(p=P, grow=0.0):
     # yonunde uzatilmasidir.  Boylece her yuzun egimi tam kontrol altindadir:
     # ust yuzler 56-62 derece (desteksiz), yay tablasi ise iki ucundan
     # tutturulmus 6.5 mm'lik bir koprüdür.
+    bx0, bx1 = p["BTN_X0"] + 0.5, p["BTN_X1"] - 0.5    # dugme, acikliktan 0.5 dar
     tail_poly = Polygon([
         (20.0, 0.0), (26.0, 0.0),
-        (p["SEAT_X0"] + 0.5, p["SEAT_Z"]),          # 62 derece
+        (p["SEAT_X0"], p["SEAT_Z"]),                # 62 derece
         (p["SEAT_X1"], p["SEAT_Z"]),                # yay tablasi (yatay koprü)
-        (p["TAIL_X"], p["SEAT_Z"] - 3.8),           # 57 derece
-        (p["TAIL_X"], p["TAIL_Z"] - 1.9),
-        (p["TAIL_X"] - 4.0, p["TAIL_Z"] - 1.9),     # tetik ucu
-        (26.0, -p["HATCH_T"]),                      # 50 derece tetik yuzeyi
+        (bx1, p["BTN_Z"] + 4.0),                    # 77 derece
+        (bx1, p["BTN_Z"]),                          # dugmenin arka kenari
+        (bx0, p["BTN_Z"]),                          # DUZ dugme yuzu (tabanla ayni)
+        (26.0, -p["HATCH_T"]),                      # 80 derece on yuz
         (20.0, -p["HATCH_T"]),
     ])
     if e:
@@ -292,7 +308,7 @@ def build_hatch(p=P, opened=False):
     return hatch
 
 
-def hatch_sweep(p=P, clearance=0.35, steps=18, start=1.2):
+def hatch_sweep(p=P, clearance=0.45, steps=28, start=1.2):
     """Kapagin acilis boyunca supurdugu hacim (bosluk paylı) -- govdeden oyulur.
     start>0: kapali konum oyulmaz, boylece oturma bilezigi korunur."""
     solid = _hatch_solid(p, grow=clearance)
@@ -329,7 +345,7 @@ def build_handle(p=P):
     yuzey 45 dereceyi asmaz (parca z boyunca prizmatiktir, tepesi pahli)."""
     r_i = p["BAND_R"] + p["FIT"] / 2
     r_o = r_i + p["COLLAR_T"]
-    z0 = p["BAND_Z0"] - 0.1
+    z0 = p["FLANGE_T"] + 0.15                # kutunun ustune oturur
     z1 = p["BAND_Z1"] + 1.6
     z_top = p["GRIP_TOP"]
     collar = g.tube(r_i, r_o, z0, z1)
@@ -365,10 +381,7 @@ def build_handle(p=P):
     handle = g.diff(handle, pocket)
 
     # --- govdenin yanaklari/koprusu ve kapagin supurdugu hacim -----------
-    bridge = g.extrude(sbox(12.0, -(p["BRIDGE_Y"] + 0.6),
-                            p["HINGE_X"] + 5.6, p["BRIDGE_Y"] + 0.6),
-                       -1.0, p["BRIDGE_Z1"] + 0.6)
-    return g.diff(handle, hatch_sweep(p, clearance=0.6, start=0.0), bridge,
+    return g.diff(handle, hatch_sweep(p, clearance=0.6, start=0.0),
                   *_cheeks(p, grow=0.4))
 
 
