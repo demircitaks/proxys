@@ -1,0 +1,191 @@
+{
+  "parametreler": {
+    "BORE": 38.0,
+    "DRAFT": 7.0,
+    "WALL": 2.4,
+    "RIM_CHAM": 0.6,
+    "FLANGE_R": 24.0,
+    "FLANGE_T": 2.4,
+    "BAND_R": 24.2,
+    "BAND_Z0": 2.8,
+    "BAND_Z1": 6.2,
+    "LID_BEAD": 0.7,
+    "LID_BEAD_Z": 3.0,
+    "LID_SKIRT": 4.6,
+    "LID_T": 2.0,
+    "LID_PLUG": 1.8,
+    "THR_PITCH": 2.7,
+    "THR_TURNS": 1.6,
+    "THR_SKIRT_ID": 28.6,
+    "THR_CREST_D": 25.9,
+    "THR_H": 1.4,
+    "CAP_H": 12.0,
+    "VENT_N": 4,
+    "PLATE_T": 2.0,
+    "PLATE_HW": 21.0,
+    "GROOVE_LIP": 1.8,
+    "GROOVE_WALL": 2.4,
+    "LIP_T": 0.8,
+    "FIT": 0.3,
+    "WEDGE": 0.5,
+    "WEDGE_LEN": 8.0,
+    "ORING_R": 19.9,
+    "ORING_CS": 1.5,
+    "ORING_GW": 1.75,
+    "ORING_GD": 1.05,
+    "TRAVEL": 34.0,
+    "PLATE_BACK": 40.0,
+    "ARM_X0": 40.0,
+    "ARM_X1": 46.0,
+    "ARM_Y0": 18.0,
+    "ARM_Y1": 21.0,
+    "ARM_TOP": 24.5,
+    "GABLE_H": 5.5,
+    "COLLAR_T": 3.4,
+    "NECK_X1": 62.0,
+    "NECK_HW": 11.5,
+    "NECK_TOP": 20.5,
+    "GRIP_HW": 12.5,
+    "GRIP_TOP": 23.0,
+    "HANDLE_L": 88.0,
+    "SNAP_N": 2,
+    "SNAP_R": 0.9,
+    "FUN_MOUTH": 52.0,
+    "FUN_OUT_D": 21.0,
+    "FUN_CONE_A": 35.0,
+    "TOP_RAIL_T": 2.2,
+    "TOP_LIP": 1.8,
+    "LID_LEN_BACK": 12.0,
+    "TAB_H": 4.0,
+    "DET_R": 0.45,
+    "DET_LEN": 3.0,
+    "HANDLE_W": 12.0,
+    "HANDLE_H": 8.0,
+    "HANDLE_Z0": 1.0
+  },
+  "parcalar": [
+    {
+      "dosya": "01-hazne-15ml.stl",
+      "not_": "Baski: AGIZ YUKARI (kanal dudaklari tablada), brim.",
+      "hacim_cm3": 14.71,
+      "olcu_mm": [
+        130.0,
+        50.5,
+        18.8
+      ]
+    },
+    {
+      "dosya": "01-hazne-30ml.stl",
+      "not_": "Baski: AGIZ YUKARI, brim.",
+      "hacim_cm3": 19.96,
+      "olcu_mm": [
+        131.2,
+        53.1,
+        29.5
+      ]
+    },
+    {
+      "dosya": "02-alt-plaka.stl",
+      "not_": "Baski: UST (conta) YUZU TABLADA. Ortak.",
+      "hacim_cm3": 5.43,
+      "olcu_mm": [
+        61.0,
+        42.0,
+        6.0
+      ]
+    },
+    {
+      "dosya": "03-ust-kapak-15ml.stl",
+      "not_": "Baski: ALT YUZ TABLADA.",
+      "hacim_cm3": 5.57,
+      "olcu_mm": [
+        57.8,
+        45.8,
+        6.0
+      ]
+    },
+    {
+      "dosya": "03-ust-kapak-30ml.stl",
+      "not_": "Baski: ALT YUZ TABLADA.",
+      "hacim_cm3": 6.12,
+      "olcu_mm": [
+        60.4,
+        48.4,
+        6.0
+      ]
+    },
+    {
+      "dosya": "04-huni-pet-vidali.stl",
+      "not_": "Opsiyonel. Baski: AGIZ TABLADA.",
+      "hacim_cm3": 15.59,
+      "olcu_mm": [
+        55.6,
+        55.6,
+        39.4
+      ]
+    },
+    {
+      "dosya": "05-conta-tpu.stl",
+      "not_": "Opsiyonel: O-ring yoksa TPU.",
+      "hacim_cm3": 0.3,
+      "olcu_mm": [
+        41.4,
+        41.4,
+        1.5
+      ]
+    }
+  ],
+  "dogrulama": {
+    "15 mL": {
+      "alt_plaka_stroku_mm3": 0.0,
+      "ust_kapak_stroku_mm": 49.8,
+      "ust_kapak_stroku_mm3": 0.0,
+      "huni_hazne_mm3": 0.0,
+      "centik_kapali_alt_mm3": 0.0,
+      "centik_kapali_ust_mm3": 0.0
+    },
+    "30 mL": {
+      "alt_plaka_stroku_mm3": 0.0,
+      "ust_kapak_stroku_mm": 52.4,
+      "ust_kapak_stroku_mm3": 0.0,
+      "huni_hazne_mm3": 0.0,
+      "centik_kapali_alt_mm3": 0.0,
+      "centik_kapali_ust_mm3": 0.0
+    },
+    "baski_cikintilari": {
+      "hazne": {
+        "sorunlu_mm2": 1621.1,
+        "yuzde": 16.81,
+        "koprü_mm2": 1571.7
+      },
+      "plaka": {
+        "sorunlu_mm2": 0.0,
+        "yuzde": 0.0,
+        "koprü_mm2": 0.0
+      },
+      "kapak": {
+        "sorunlu_mm2": 0.0,
+        "yuzde": 0.0,
+        "koprü_mm2": 0.0
+      },
+      "huni": {
+        "sorunlu_mm2": 389.9,
+        "yuzde": 3.35,
+        "koprü_mm2": 165.7
+      }
+    },
+    "alt_acik_yuzde": 92.5,
+    "kalibrasyon": [
+      {
+        "ml": 15,
+        "derinlik_mm": 12.23,
+        "olculen_ml": 15.0
+      },
+      {
+        "ml": 30,
+        "derinlik_mm": 22.9,
+        "olculen_ml": 30.0
+      }
+    ]
+  }
+}
