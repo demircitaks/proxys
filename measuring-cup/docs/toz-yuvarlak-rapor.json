@@ -9,8 +9,8 @@
     "BAND_R": 24.2,
     "BAND_Z0": 2.8,
     "BAND_Z1": 6.2,
-    "LID_BEAD": 0.9,
-    "LID_BEAD_Z": 3.2,
+    "LID_BEAD": 0.7,
+    "LID_BEAD_Z": 3.0,
     "LID_SKIRT": 4.6,
     "LID_T": 2.0,
     "LID_PLUG": 1.8,
@@ -27,12 +27,12 @@
     "GROOVE_WALL": 2.4,
     "LIP_T": 0.8,
     "FIT": 0.3,
-    "WEDGE": 0.5,
+    "WEDGE": 0.35,
     "WEDGE_LEN": 8.0,
     "ORING_R": 19.9,
     "ORING_CS": 1.5,
     "ORING_GW": 1.75,
-    "ORING_GD": 1.05,
+    "ORING_GD": 1.15,
     "TRAVEL": 34.0,
     "PLATE_BACK": 40.0,
     "ARM_X0": 40.0,
@@ -59,13 +59,22 @@
     "BOSS_R": 5.2,
     "EAR_R": 6.2,
     "OPEN_DEG": 150.0,
-    "TAB_ANG": 0.0,
+    "SEAL_GAP": 0.1,
     "TAB_W": 14.0,
-    "TAB_H": 2.0,
-    "TAB_R": 1.6,
+    "TAB_OUT": 3.2,
+    "FINGER_L": 10.0,
+    "FINGER_T": 1.5,
+    "LEG_T": 1.2,
+    "LEG_H": 3.4,
+    "FOOT_T": 0.8,
+    "BUMP": 0.6,
+    "BUMP_W": 2.4,
+    "FINGER_CLR": 0.6,
     "LOCK_DEG": 14.0,
-    "LOCK_WEDGE": 0.45,
-    "DET_R": 0.35,
+    "WEDGE_TOP": 0.4,
+    "POST_HALF": 22.0,
+    "SKIRT_T": 1.5,
+    "POST_ZB": -4.0,
     "HANDLE_W": 12.0,
     "HANDLE_H": 8.0,
     "FUN_GAP": 0.6,
@@ -73,17 +82,17 @@
     "FUN_WALL": 1.4,
     "SPOUT_D": 20.8,
     "SPOUT_L": 7.0,
-    "FIN_A0": 35.0,
-    "FIN_A1": 145.0,
+    "FIN_A0": 40.0,
+    "FIN_A1": 130.0,
     "FIN_RO": 26.5
   },
   "parcalar": [
     {
       "dosya": "01-hazne-15ml.stl",
       "not_": "Baski: AGIZ TABLADA (ters), huni yukari. Destek yok.",
-      "hacim_cm3": 18.62,
+      "hacim_cm3": 22.05,
       "olcu_mm": [
-        149.2,
+        153.4,
         51.1,
         36.5
       ]
@@ -91,41 +100,41 @@
     {
       "dosya": "01-hazne-30ml.stl",
       "not_": "Baski: AGIZ TABLADA (ters), huni yukari.",
-      "hacim_cm3": 25.0,
+      "hacim_cm3": 31.65,
       "olcu_mm": [
-        150.5,
-        51.6,
+        153.8,
+        51.1,
         47.2
       ]
     },
     {
       "dosya": "02-alt-disk.stl",
-      "not_": "Baski: ALT YUZ TABLADA (tirnak yukari), conta yuzu utulenir. Ortak.",
-      "hacim_cm3": 4.78,
+      "not_": "Baski: ALT YUZ TABLADA, conta yuzu utulenir. Ortak.",
+      "hacim_cm3": 4.89,
       "olcu_mm": [
-        58.9,
+        61.9,
         48.0,
-        4.5
+        2.5
       ]
     },
     {
       "dosya": "03-ust-disk-15ml.stl",
-      "not_": "Baski: UST YUZ TABLADA.",
-      "hacim_cm3": 4.87,
+      "not_": "Baski: UST YUZ TABLADA (bacak/parmak yukari).",
+      "hacim_cm3": 5.02,
       "olcu_mm": [
-        59.0,
+        61.0,
         48.2,
-        4.5
+        5.9
       ]
     },
     {
       "dosya": "03-ust-disk-30ml.stl",
-      "not_": "Baski: UST YUZ TABLADA.",
-      "hacim_cm3": 5.34,
+      "not_": "Baski: UST YUZ TABLADA (bacak/parmak yukari).",
+      "hacim_cm3": 5.49,
       "olcu_mm": [
-        60.3,
+        62.3,
         50.8,
-        4.5
+        5.9
       ]
     },
     {
@@ -151,49 +160,53 @@
     {
       "dosya": "05-conta-tpu.stl",
       "not_": "Opsiyonel: O-ring yoksa TPU.",
-      "hacim_cm3": 0.3,
+      "hacim_cm3": 0.32,
       "olcu_mm": [
         41.4,
         41.4,
-        1.5
+        1.6
       ]
     }
   ],
   "dogrulama": {
     "15 mL": {
-      "alt_disk_donus_mm3": 0.395,
-      "ust_disk_donus_mm3": 0.396,
+      "alt_disk_donus_mm3": 0.0,
+      "ust_disk_donus_mm3": 0.0,
       "diskler_arasi_mm3": 0.0,
-      "kapali_tirnak_alt_mm3": 0.0,
-      "kapali_tirnak_ust_mm3": 0.0
+      "alt_tumsek_girisim_mm3": 1.689,
+      "ust_tumsek_girisim_mm3": 2.094,
+      "kapali_alt_mm3": 0.0,
+      "kapali_ust_mm3": 0.0
     },
     "30 mL": {
-      "alt_disk_donus_mm3": 0.395,
-      "ust_disk_donus_mm3": 0.385,
+      "alt_disk_donus_mm3": 0.0,
+      "ust_disk_donus_mm3": 0.0,
       "diskler_arasi_mm3": 0.0,
-      "kapali_tirnak_alt_mm3": 0.0,
-      "kapali_tirnak_ust_mm3": 0.0
+      "alt_tumsek_girisim_mm3": 1.689,
+      "ust_tumsek_girisim_mm3": 2.094,
+      "kapali_alt_mm3": 0.0,
+      "kapali_ust_mm3": 0.0
     },
     "baski_cikintilari": {
       "hazne_15": {
-        "sorunlu_mm2": 447.5,
-        "yuzde": 3.11,
-        "koprü_mm2": 343.3
+        "sorunlu_mm2": 579.2,
+        "yuzde": 3.7,
+        "koprü_mm2": 475.0
       },
       "hazne_30": {
-        "sorunlu_mm2": 476.4,
-        "yuzde": 2.68,
-        "koprü_mm2": 343.8
+        "sorunlu_mm2": 609.2,
+        "yuzde": 3.16,
+        "koprü_mm2": 476.6
       },
       "alt_disk": {
-        "sorunlu_mm2": 43.6,
-        "yuzde": 1.0,
-        "koprü_mm2": 43.6
+        "sorunlu_mm2": 40.9,
+        "yuzde": 0.91,
+        "koprü_mm2": 40.9
       },
       "ust_disk": {
-        "sorunlu_mm2": 2.7,
-        "yuzde": 0.06,
-        "koprü_mm2": 2.7
+        "sorunlu_mm2": 37.1,
+        "yuzde": 0.8,
+        "koprü_mm2": 37.1
       },
       "mil": {
         "sorunlu_mm2": 0.0,

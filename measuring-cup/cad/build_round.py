@@ -29,17 +29,18 @@ def iv(a, b):
 
 def verify(p=S.P):
     out = {}
-    ax, ad = S.pivot_axis(p)
-    bot = S.build_bottom(p)
+    bot, bot0 = S.build_bottom(p), S.build_bottom(p, bump=False)
     for size in S.SIZES:
-        b, top = S.build_body(size, p), S.build_top(size, p)
-        wb = wt = wbt = 0.0
-        for a in np.arange(3.0, p["OPEN_DEG"] + 0.01, 3.0):
-            mb = K.rotate_about(bot, ax, ad, a); mt = K.rotate_about(top, ax, ad, -a)
+        b, top, top0 = S.build_body(size, p), S.build_top(size, p), S.build_top(size, p, bump=False)
+        wb = wt = wbt = wbb = wtb = 0.0
+        for a in np.arange(1.0, p["OPEN_DEG"] + 0.01, 1.0):
+            mb, mt = S._rot(bot0, a, p), S._rot(top0, -a, p)
             wb = max(wb, iv(b, mb)); wt = max(wt, iv(b, mt)); wbt = max(wbt, iv(mb, mt))
+            wbb = max(wbb, iv(b, S._rot(bot, a, p))); wtb = max(wtb, iv(b, S._rot(top, -a, p)))
         out["%d mL" % size] = dict(alt_disk_donus_mm3=round(wb, 3), ust_disk_donus_mm3=round(wt, 3),
                                    diskler_arasi_mm3=round(wbt, 3),
-                                   kapali_tirnak_alt_mm3=round(iv(b, bot), 3), kapali_tirnak_ust_mm3=round(iv(b, top), 3))
+                                   alt_tumsek_girisim_mm3=round(wbb, 3), ust_tumsek_girisim_mm3=round(wtb, 3),
+                                   kapali_alt_mm3=round(iv(b, bot), 3), kapali_ust_mm3=round(iv(b, top), 3))
     oh = {}
     for nm, m in (("hazne_15", on_bed(flip(S.build_body(15, p)))), ("hazne_30", on_bed(flip(S.build_body(30, p)))),
                   ("alt_disk", on_bed(bot)), ("ust_disk", on_bed(flip(S.build_top(15, p)))), ("mil", on_bed(S.build_pin(15, p)))):
@@ -54,9 +55,9 @@ def main(render_png=True):
     os.makedirs(STL, exist_ok=True)
     parts = [("01-hazne-15ml.stl", on_bed(flip(S.build_body(15))), "Baski: AGIZ TABLADA (ters), huni yukari. Destek yok."),
              ("01-hazne-30ml.stl", on_bed(flip(S.build_body(30))), "Baski: AGIZ TABLADA (ters), huni yukari."),
-             ("02-alt-disk.stl", on_bed(S.build_bottom()), "Baski: ALT YUZ TABLADA (tirnak yukari), conta yuzu utulenir. Ortak."),
-             ("03-ust-disk-15ml.stl", on_bed(flip(S.build_top(15))), "Baski: UST YUZ TABLADA."),
-             ("03-ust-disk-30ml.stl", on_bed(flip(S.build_top(30))), "Baski: UST YUZ TABLADA."),
+             ("02-alt-disk.stl", on_bed(S.build_bottom()), "Baski: ALT YUZ TABLADA, conta yuzu utulenir. Ortak."),
+             ("03-ust-disk-15ml.stl", on_bed(flip(S.build_top(15))), "Baski: UST YUZ TABLADA (bacak/parmak yukari)."),
+             ("03-ust-disk-30ml.stl", on_bed(flip(S.build_top(30))), "Baski: UST YUZ TABLADA (bacak/parmak yukari)."),
              ("04-mil-15ml.stl", on_bed(S.build_pin(15)), "Baski: BAS TABLADA."),
              ("04-mil-30ml.stl", on_bed(S.build_pin(30)), "Baski: BAS TABLADA."),
              ("05-conta-tpu.stl", on_bed(S.build_gasket()), "Opsiyonel: O-ring yoksa TPU.")]
