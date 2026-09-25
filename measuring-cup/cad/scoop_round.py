@@ -44,17 +44,22 @@ P.update(dict(
     TRAVEL      = 42.0,   # acik konum: on kenar x = -22 + 42 = +20 (hazne kenari 19)
     LIP_W       = 1.0,    # dudagin plakanin altina uzanmasi (radyal); plaka pahi buna oturur
     SKIRT_T     = 1.6,    # yan etek kalinligi
-    RAIL_X0     = -0.5,   # eteklerin basi
-    RAIL_ZB     = -4.5,   # eteklerin alti
-    GATE_X      = 56.0,   # etekleri sapa baglayan kapi (ust cubuk) x0; 6 mm genis
-    KNOB_Y0     = 7.0,    # itme cikintilari: sapin yaninda |y| 7..13
-    KNOB_Y1     = 13.0,
-    KNOB_L      = 4.0,
-    SFING_X     = 42.0,   # etek yay parmagi (kapali konumda plakanin centigi burada)
-    SFING_W     = 3.0,    # parmak genisligi (x)
-    SFING_ROOT  = 9.0,    # parmagin ust ucu (baglı) z; alt ucu serbest
-    SFING_BUMP  = 0.5,    # tumsek (ice), 45 derece yanakli
-    SLIT        = 0.6,
+    RAIL_X0     = -0.5,   # raylarin basi
+    RAIL_X1     = 62.0,   # raylarin sonu (ikinci koprunun arkasi)
+    RAIL_ZB     = -4.5,   # raylarin alti
+    RAIL_ZT     = 2.0,    # alcak dis duvarin ustu (ters baskida iki kopru arasinda koprulenir)
+    LIP_SLOPE_X1= 33.0,   # dudak bu x'e kadar 45 derece egimli (plaka pahi oturur), sonrasi duz
+    BRIDGE_X    = (28.0, 56.0),  # raylari sapa baglayan koprulerin x0'lari (6 mm genis, agiz duzleminde)
+    TRIG_X0     = 40.0,   # tetik cubugu (plakanin altinda, sapin kokunun altinda)
+    TRIG_X1     = 46.0,
+    TRIG_HW     = 16.0,
+    TRIG_H      = 4.0,    # plakanin altindan sarkma
+    PFING_X0    = 36.0,   # plaka yay parmagi: kenar seridi x PFING_X0..PLATE_X1, kok onde
+    PFING_T     = 1.6,    # serit kalinligi
+    PFING_SLOT  = 0.6,
+    PBUMP_X     = 42.5,   # tumsek (disa) x0, 3 mm genis
+    PBUMP_W     = 3.0,
+    PBUMP       = 0.5,
     # --- ust kapak mandali --------------------------------------------------------
     TAB_W       = 14.0,   # rijit tirnagin teget genisligi
     TAB_OUT     = 3.2,    # tirnagin kapak kenarindan disari tasmasi
@@ -196,45 +201,40 @@ def _extrude_x(poly_yz, x0, x1):
 
 
 def _rails(size, p):
-    """Iki yan etek (RAIL_ZB..h, ters baskida tabladan yukselir) + altlarinda
-    45 derece egimli dudaklar + etekleri sapa baglayan kapi cubugu (agiz duzleminde)."""
+    """Iki alcak ray: dis duvar (RAIL_ZB..RAIL_ZT) + altinda dudak.  Dudak
+    LIP_SLOPE_X1'e kadar 45 derece egimli (plakanin pahi oturur, kendini ortalar),
+    sonrasi duz (plaka yay parmaklari uzerinden gecer).  Iki ince kopru
+    (bacaklar + agiz duzleminde cubuk) raylari sapa baglar; ters baskida dis
+    duvarin ust kenari bacaklar arasinda koprulenir (19 / 22 mm)."""
     h = cup_depth(size, p)
     yi = p["PLATE_HW"] + p["FIT"] / 2
     yo = yi + p["SKIRT_T"]
     li = p["PLATE_HW"] - p["LIP_W"]
-    zl = -p["DISC_T"] - p["SEAL_GAP"]                    # dudak ucu (plaka bunun 0.1 ustunde)
-    zb = p["RAIL_ZB"]
-    x0, x1 = p["RAIL_X0"], p["PLATE_X1"] + p["TRAVEL"] + 2.0
-    prof = Polygon([(li, zb), (yo, zb), (yo, h), (yi, h), (yi, zl + (yi - li)), (li, zl)])
-    parts = [_extrude_x(prof, x0, x1)]
-    prof_m = Polygon([(-y, z) for y, z in prof.exterior.coords])
-    parts.append(_extrude_x(prof_m, x0, x1))
-    parts.append(g.box(p["GATE_X"], p["GATE_X"] + 6.0, -yo, yo, h - 3.0, h))
+    zl = -p["DISC_T"] - p["SEAL_GAP"]
+    zb, zt = p["RAIL_ZB"], p["RAIL_ZT"]
+    x0, x1, xs = p["RAIL_X0"], p["RAIL_X1"], p["LIP_SLOPE_X1"]
+    slope = Polygon([(li, zb), (yo, zb), (yo, zt), (yi, zt), (yi, zl + (yi - li)), (li, zl)])
+    flat = Polygon([(li, zb), (yo, zb), (yo, zt), (yi, zt), (yi, zl), (li, zl)])
+    parts = []
+    for prof, a, b in ((slope, x0, xs), (flat, xs, x1)):
+        parts.append(_extrude_x(prof, a, b))
+        parts.append(_extrude_x(Polygon([(-y, z) for y, z in prof.exterior.coords]), a, b))
+    for bx in p["BRIDGE_X"]:
+        parts.append(g.box(bx, bx + 6.0, -yo, yo, h - 3.0, h))                    # cubuk
+        for sgn in (1, -1):
+            parts.append(g.box(bx, bx + 6.0, min(sgn * yi, sgn * yo), max(sgn * yi, sgn * yo), zt - 0.5, h))
     return g.union(*parts)
 
 
-def _skirt_slits(size, p):
-    """Etek yay parmaklarini olusturan dikey yariklar (her iki etekte)."""
-    yi = p["PLATE_HW"] + p["FIT"] / 2
-    yo = yi + p["SKIRT_T"]
-    x0 = p["SFING_X"]
-    cuts = []
-    for sgn in (1, -1):
-        for xa in (x0 - p["SLIT"], x0 + p["SFING_W"]):
-            cuts.append(g.box(xa, xa + p["SLIT"], min(sgn * (yi - 0.5), sgn * (yo + 0.5)),
-                              max(sgn * (yi - 0.5), sgn * (yo + 0.5)), p["RAIL_ZB"] - 1, p["SFING_ROOT"]))
-    return cuts
-
-
-def _skirt_bumps(p, grow=0.0):
-    """Parmaklarin ic yuzundeki tumsekler (x'te 45 derece yanakli); grow>0 -> plakadaki centik."""
-    yi = p["PLATE_HW"] + p["FIT"] / 2
-    b, e = p["SFING_BUMP"], grow
-    x0, x1 = p["SFING_X"] - e, p["SFING_X"] + p["SFING_W"] + e
+def _plate_bumps(p, grow=0.0):
+    """Plaka yay parmaklarinin dis yuzundeki tumsekler (x'te 45 derece yanakli).
+    grow>0 -> raya oyulan yuva.  Kapali konum; acik konum icin +TRAVEL kaydirilir."""
+    hw, e, b = p["PLATE_HW"], grow, p["PBUMP"]
+    x0, x1 = p["PBUMP_X"] - e, p["PBUMP_X"] + p["PBUMP_W"] + e
     out = []
     for sgn in (1, -1):
-        pts = [(x0, yi + 0.3), (x0 + b, yi - b - e), (x1 - b, yi - b - e), (x1, yi + 0.3)]
-        out.append(g.extrude(Polygon([(x, sgn * y) for x, y in pts]), -1.0 - e, 0.0 + e))
+        pts = [(x0, hw - 0.3), (x0 + b, hw + b + e), (x1 - b, hw + b + e), (x1, hw - 0.3)]
+        out.append(g.extrude(Polygon([(x, sgn * y) for x, y in pts]), -p["DISC_T"] - e, 0.0 + e))
     return out
 
 
@@ -288,7 +288,7 @@ def _top_channel(size, p, steps=44):
     return g.union(*parts, pocket)
 
 
-def build_body(size, p=P, bumps=True):
+def build_body(size, p=P, pockets=True):
     h = cup_depth(size, p)
     r_rim = _r_at(h, p)
     w = p["WALL"]
@@ -306,10 +306,11 @@ def build_body(size, p=P, bumps=True):
                   g.cyl(p["PIN_D"] / 2 + 2.0 + p["FIT"] / 2, -1, 1.3).apply_translation((p["PIVOT_X"], 0, 0)))
     # O-ring yuvasi (oturma yuzeyinde)
     body = g.diff(body, g.tube(p["ORING_R"] - p["ORING_GW"] / 2, p["ORING_R"] + p["ORING_GW"] / 2, -0.1, p["ORING_GD"]))
-    # ust mandal kanali (burna oyulur), etek yariklari, etek tumsekleri
-    body = g.diff(body, _top_channel(size, p), *_skirt_slits(size, p))
-    if bumps:
-        body = g.union(body, *_skirt_bumps(p))
+    # ust mandal kanali (burna oyulur); plaka tumseklerinin yuvalari (kapali + acik)
+    body = g.diff(body, _top_channel(size, p))
+    if pockets:
+        for dx in (0.0, p["TRAVEL"]):
+            body = g.diff(body, *[b.apply_translation((dx, 0, 0)) for b in _plate_bumps(p, grow=p["FIT"] / 2)])
     # hazne bosluğu en sonda
     top = h + 10.0
     body = g.diff(body, g.revolve([(0, -0.2), (p["BORE"] / 2, -0.2), (p["BORE"] / 2, 0), (r_rim, h),
@@ -320,24 +321,30 @@ def build_body(size, p=P, bumps=True):
 # ===========================================================================
 # TABAN PLAKASI  (baski: conta yuzu tablada, itme cikintilari yukari)
 # ===========================================================================
-def build_plate(size, p=P, opened=False, notches=True):
-    h = cup_depth(size, p)
+def build_plate(size, p=P, opened=False, bumps=True):
     hw, t = p["PLATE_HW"], p["DISC_T"]
-    plan = Point(0, 0).buffer(p["PLATE_RF"], resolution=128).union(sbox(0.0, -hw, p["PLATE_X1"], hw)).buffer(0)
-    plate = g.extrude(plan, -t, 0.0)
-    # duz kenarlarin alt pahi: (hw-LIP_W-0.15, -t) -> 45 derece, dudagin egiminin 0.18 mm ustunde
+    x1 = p["PLATE_X1"]
+    plan = Point(0, 0).buffer(p["PLATE_RF"], resolution=128).union(sbox(0.0, -hw, x1, hw)).buffer(0)
+    # yay parmaklari: kenar seridi, onden bagli, arkadan serbest (yarik kenardan cikar)
+    for sgn in (1, -1):
+        ys = hw - p["PFING_T"]
+        plan = plan.difference(sbox(p["PFING_X0"], min(sgn * ys, sgn * (ys - p["PFING_SLOT"])), x1 + 1,
+                                    max(sgn * ys, sgn * (ys - p["PFING_SLOT"]))))
+    plate = g.extrude(plan.buffer(0), -t, 0.0)
+    # duz kenarlarin alt pahi (parmak seritleri haric): dudagin egiminin 0.18 mm ustunde
     c0 = hw - p["LIP_W"] - 0.15
     cham = Polygon([(c0 - 0.1, -t - 0.1), (c0, -t), (hw + 0.3, -t + (hw + 0.3 - c0)), (hw + 0.6, -t + (hw + 0.3 - c0)),
                     (hw + 0.6, -t - 0.1)])
-    plate = g.diff(plate, _extrude_x(cham, -1.0, p["PLATE_X1"] + 1.0),
-                   _extrude_x(Polygon([(-y, z) for y, z in cham.exterior.coords]), -1.0, p["PLATE_X1"] + 1.0))
-    # itme cikintilari (sapin iki yaninda, kapi cubugunun altindan gecer)
-    for sgn in (1, -1):
-        plate = g.union(plate, g.box(p["PLATE_X1"] - p["KNOB_L"], p["PLATE_X1"], sgn * p["KNOB_Y0"], sgn * p["KNOB_Y1"],
-                                     -0.5, h - 3.5))
-    if notches:                                             # kapali (x = SFING_X) ve acik (x - TRAVEL)
-        for dx in (0.0, -p["TRAVEL"]):
-            plate = g.diff(plate, *[b.apply_translation((dx, 0, 0)) for b in _skirt_bumps(p, grow=p["FIT"] / 2)])
+    plate = g.diff(plate, _extrude_x(cham, -1.0, p["PFING_X0"] - 0.5),
+                   _extrude_x(Polygon([(-y, z) for y, z in cham.exterior.coords]), -1.0, p["PFING_X0"] - 0.5))
+    if bumps:
+        plate = g.union(plate, *_plate_bumps(p))
+    # tetik cubugu: plakanin altinda, tirtikli arka yuz
+    trig = g.box(p["TRIG_X0"], p["TRIG_X1"], -p["TRIG_HW"], p["TRIG_HW"], -t - p["TRIG_H"], -t + 0.5)
+    for k in range(3):
+        zc = -t - p["TRIG_H"] + 0.8 + k * 1.2
+        trig = g.diff(trig, g.box(p["TRIG_X1"] - 0.5, p["TRIG_X1"] + 1, -p["TRIG_HW"] - 1, p["TRIG_HW"] + 1, zc - 0.3, zc + 0.3))
+    plate = g.union(plate, trig)
     if opened:
         plate.apply_translation((p["TRAVEL"], 0, 0))
     return plate

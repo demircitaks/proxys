@@ -65,16 +65,24 @@
     "LIP_W": 1.0,
     "SKIRT_T": 1.6,
     "RAIL_X0": -0.5,
+    "RAIL_X1": 62.0,
     "RAIL_ZB": -4.5,
-    "GATE_X": 56.0,
-    "KNOB_Y0": 7.0,
-    "KNOB_Y1": 13.0,
-    "KNOB_L": 4.0,
-    "SFING_X": 42.0,
-    "SFING_W": 3.0,
-    "SFING_ROOT": 9.0,
-    "SFING_BUMP": 0.5,
-    "SLIT": 0.6,
+    "RAIL_ZT": 2.0,
+    "LIP_SLOPE_X1": 33.0,
+    "BRIDGE_X": [
+      28.0,
+      56.0
+    ],
+    "TRIG_X0": 40.0,
+    "TRIG_X1": 46.0,
+    "TRIG_HW": 16.0,
+    "TRIG_H": 4.0,
+    "PFING_X0": 36.0,
+    "PFING_T": 1.6,
+    "PFING_SLOT": 0.6,
+    "PBUMP_X": 42.5,
+    "PBUMP_W": 3.0,
+    "PBUMP": 0.5,
     "TAB_W": 14.0,
     "TAB_OUT": 3.2,
     "FINGER_L": 10.0,
@@ -100,7 +108,7 @@
     {
       "dosya": "01-hazne-15ml.stl",
       "not_": "Baski: AGIZ TABLADA (ters), huni yukari. Destek yok.",
-      "hacim_cm3": 26.77,
+      "hacim_cm3": 24.28,
       "olcu_mm": [
         152.5,
         51.6,
@@ -110,7 +118,7 @@
     {
       "dosya": "01-hazne-30ml.stl",
       "not_": "Baski: AGIZ TABLADA (ters), huni yukari.",
-      "hacim_cm3": 36.05,
+      "hacim_cm3": 30.88,
       "olcu_mm": [
         153.8,
         51.6,
@@ -118,23 +126,13 @@
       ]
     },
     {
-      "dosya": "02-alt-plaka-15ml.stl",
-      "not_": "Baski: PLAKA ALTI TABLADA, cikintilar yukari; conta yuzu utulenir.",
-      "hacim_cm3": 7.77,
+      "dosya": "02-alt-plaka.stl",
+      "not_": "Baski: CONTA YUZU TABLADA, tetik yukari. Ortak.",
+      "hacim_cm3": 8.09,
       "olcu_mm": [
         68.0,
-        48.0,
-        11.2
-      ]
-    },
-    {
-      "dosya": "02-alt-plaka-30ml.stl",
-      "not_": "Baski: PLAKA ALTI TABLADA; conta yuzu utulenir.",
-      "hacim_cm3": 8.28,
-      "olcu_mm": [
-        68.0,
-        48.0,
-        21.9
+        49.0,
+        6.5
       ]
     },
     {
@@ -193,7 +191,7 @@
       "plaka_kayma_mm3": 0.0,
       "ust_kapak_donus_mm3": 0.0,
       "plaka_ust_kapak_mm3": 0.0,
-      "plaka_tumsek_girisim_mm3": 1.553,
+      "plaka_tumsek_girisim_mm3": 3.883,
       "ust_tumsek_girisim_mm3": 2.094,
       "kapali_plaka_mm3": 0.0,
       "kapali_ust_mm3": 0.0,
@@ -203,7 +201,7 @@
       "plaka_kayma_mm3": 0.0,
       "ust_kapak_donus_mm3": 0.0,
       "plaka_ust_kapak_mm3": 0.0,
-      "plaka_tumsek_girisim_mm3": 1.553,
+      "plaka_tumsek_girisim_mm3": 3.883,
       "ust_tumsek_girisim_mm3": 2.094,
       "kapali_plaka_mm3": 0.0,
       "kapali_ust_mm3": 0.0,
@@ -211,24 +209,19 @@
     },
     "baski_cikintilari": {
       "hazne_15": {
-        "sorunlu_mm2": 715.7,
-        "yuzde": 3.24,
-        "koprü_mm2": 367.3
+        "sorunlu_mm2": 839.5,
+        "yuzde": 4.49,
+        "koprü_mm2": 574.3
       },
       "hazne_30": {
-        "sorunlu_mm2": 410.4,
-        "yuzde": 1.4,
-        "koprü_mm2": 369.0
+        "sorunlu_mm2": 576.0,
+        "yuzde": 2.53,
+        "koprü_mm2": 576.0
       },
-      "plaka_15": {
-        "sorunlu_mm2": 0.0,
-        "yuzde": 0.0,
-        "koprü_mm2": 0.0
-      },
-      "plaka_30": {
-        "sorunlu_mm2": 0.0,
-        "yuzde": 0.0,
-        "koprü_mm2": 0.0
+      "plaka": {
+        "sorunlu_mm2": 48.0,
+        "yuzde": 0.7,
+        "koprü_mm2": 48.0
       },
       "ust_disk": {
         "sorunlu_mm2": 37.1,

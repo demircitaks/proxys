@@ -30,9 +30,9 @@ def iv(a, b):
 def verify(p=S.P):
     out = {}
     for size in S.SIZES:
-        b, b0 = S.build_body(size, p), S.build_body(size, p, bumps=False)
+        b, b0 = S.build_body(size, p), S.build_body(size, p)
         top, top0 = S.build_top(size, p), S.build_top(size, p, bump=False)
-        pl, pl0 = S.build_plate(size, p), S.build_plate(size, p, notches=False)
+        pl, pl0 = S.build_plate(size, p), S.build_plate(size, p, bumps=False)
         wp = wpb = 0.0
         for dx in np.arange(0.5, p["TRAVEL"] + 8.01, 0.5):
             m0 = pl0.copy(); m0.apply_translation((dx, 0, 0)); wp = max(wp, iv(b0, m0))
@@ -49,7 +49,7 @@ def verify(p=S.P):
                                    acik_plaka_mm3=round(iv(b, S.build_plate(size, p, opened=True)), 3))
     oh = {}
     for nm, m in (("hazne_15", on_bed(flip(S.build_body(15, p)))), ("hazne_30", on_bed(flip(S.build_body(30, p)))),
-                  ("plaka_15", on_bed(S.build_plate(15, p))), ("plaka_30", on_bed(S.build_plate(30, p))),
+                  ("plaka", on_bed(flip(S.build_plate(15, p)))),
                   ("ust_disk", on_bed(flip(S.build_top(15, p)))), ("mil", on_bed(S.build_pin(15, p)))):
         r = K.overhang_report(m)
         oh[nm] = dict(sorunlu_mm2=round(r["sorunlu_alan"], 1), yuzde=round(100 * r["sorunlu_oran"], 2), koprü_mm2=round(r["yatay_tavan"], 1))
@@ -62,8 +62,7 @@ def main(render_png=True):
     os.makedirs(STL, exist_ok=True)
     parts = [("01-hazne-15ml.stl", on_bed(flip(S.build_body(15))), "Baski: AGIZ TABLADA (ters), huni yukari. Destek yok."),
              ("01-hazne-30ml.stl", on_bed(flip(S.build_body(30))), "Baski: AGIZ TABLADA (ters), huni yukari."),
-             ("02-alt-plaka-15ml.stl", on_bed(S.build_plate(15)), "Baski: PLAKA ALTI TABLADA, cikintilar yukari; conta yuzu utulenir."),
-             ("02-alt-plaka-30ml.stl", on_bed(S.build_plate(30)), "Baski: PLAKA ALTI TABLADA; conta yuzu utulenir."),
+             ("02-alt-plaka.stl", on_bed(flip(S.build_plate(15))), "Baski: CONTA YUZU TABLADA, tetik yukari. Ortak."),
              ("03-ust-disk-15ml.stl", on_bed(flip(S.build_top(15))), "Baski: UST YUZ TABLADA (bacak/parmak yukari)."),
              ("03-ust-disk-30ml.stl", on_bed(flip(S.build_top(30))), "Baski: UST YUZ TABLADA (bacak/parmak yukari)."),
              ("04-mil-15ml.stl", on_bed(S.build_pin(15)), "Baski: BAS TABLADA."),
