@@ -1,23 +1,22 @@
-"""YUVARLAK kepce: alt ve ust kapak birer disk, sap kokundeki tek dikey mil
-etrafinda yana DONER.  Ray, kanal, kizak yok; siluet bastan sona yuvarlak.
+"""YUVARLAK kepce, SURGULU taban: hazne ve ust kapak yuvarlak; taban plakasi
+sapa dogru duz kayar (tek elle: sapin yanindaki iki cikintiyi basparmakla
+geri it -> taban acilir -> geri cek -> klik).
 
-- Ust kapak (disk) kapatilirken on kenari fazla tozu super -> silme.
-- Alt disk tabandir; kapaliyken O-ring'e oturur.  Acmak icin diski sapin
-  altina dogru cevirirsiniz.  Ikisi de ayni mile takilir.
-- MANDAL: her kapagin on kenarinda rijit bir tirnak, tirnagin yanindan teget
-  uzanan bir yay parmagi ve parmagin ucunda tumsek vardir.  Govdenin onunde
-  bir "burun" (post) bulunur; tirnak kapanmanin son LOCK_DEG derecesinde
-  burnun icindeki C-kanala girer.  Alt kanalin tabani rampalidir (kama):
-  disk O-ring'e dogru itilir.  Ust kapagin tirnagi asagi sarkan bir bacak +
-  iceri bakan ayaktir; ayak burundaki dudagin altina girer, dudagin alti
-  rampalidir: kapak agza cekilir.  Parmagin tumsegi kapali konumda kanal dis
-  duvarindaki yuvaya oturur (centik, klik); acarken parmak ~0.45 mm iceri
-  esneyerek gecer.  Yay = parmagin kendisi, O-ring'e veya diske bagli degil.
+- Ust kapak (disk): sap kokundeki dikey mil etrafinda +y'ye doner; kapatirken
+  on kenari fazla tozu super.  On kenarindaki bacak+ayak burundaki dudagin
+  altina girer (kapak agza cekilir), yay parmagi + tumsek klik yapar.
+- Taban PLAKASI: onu yuvarlak (r 22), arkasi 48 mm genis duz kenarli.  Kenarlari
+  pahli; sapin kokundeki iki yan etegin altindaki 45 derecelik DUDAKLARA oturur
+  (kizak: kendini ortalar).  O-ring plakayi dudaklara bastirir -> conta her
+  yerde esit sikisir.  Plaka sapa dogru TRAVEL kadar kayinca hazne tamamen acilir.
+- Plaka kilidi: eteklerin icine kesilmis dikey yay parmaklari (ustten baglı,
+  altta serbest), ic yuzlerinde tumsek; plakanin kenarindaki centiklere kapali
+  ve acik konumda oturur (klik).  Plaka arkadan tamamen cikarilabilir (temizlik).
 - Haznenin alti hafif HUNI: 45 derecelik koni, ucu PCO-1881 pet sise agzina
-  giren Ø20.8 boru.  Alt disk huninin ustundeki yariktan yana kayar; huni
-  govdeye +y tarafindaki kanatla baglidir (diskin supurmedigi taraf).
-z = 0 alt diskin ust yuzu (taban); z = h ust diskin alt yuzu (agiz).
-Baski: hazne AGIZ TABLADA (ters), huni yukari; koni her iki yonde 45 derece.
+  giren Ø20.8 boru.  Huni, dudaklar ve on burunla govdeye baglidir.
+z = 0 plakanin ust yuzu (taban); z = h ust diskin alt yuzu (agiz).
+Baski: hazne AGIZ TABLADA (ters), huni yukari; etekler tabladan yukselir,
+dudaklar 45 derece, koni her iki yonde 45 derece -> destek yok.
 """
 import numpy as np
 import trimesh
@@ -28,21 +27,38 @@ import scoop_slide as B
 
 P = dict(B.P)
 P.update(dict(
-    FLANGE_R    = 24.0,
+    FLANGE_R    = 25.8,   # flans etekleri de sarar (|x| < 9'da bindirme)
     FLANGE_T    = 2.4,
     DISC_T      = 2.5,
     PIVOT_X     = 28.5,   # mil ekseni (flansin 4.5 mm disinda, sap kokunde)
     PIN_D       = 4.0,
     BOSS_R      = 5.2,    # mil etrafindaki gobek
     EAR_R       = 6.2,    # disklerin mile uzanan kulagi
-    OPEN_DEG    = 150.0,  # diskin acik konumu (sapin uzerine / altina)
+    OPEN_DEG    = 120.0,  # ust kapagin acik konumu (98 derecede hazne tamamen acik; 150+ etege carpar)
     ORING_GD    = 1.15,   # yuva derinligi: O-ring 0.35 mm tasar
     SEAL_GAP    = 0.10,   # kapali konumda disk yuzu ile flans arasi (O-ring 0.25 sikisir)
-    # --- mandal ---------------------------------------------------------------
+    # --- taban plakasi + raylar ---------------------------------------------------
+    PLATE_RF    = 22.0,   # plakanin on yaricapi (O-ring disi 20.8 -> 1.2 pay)
+    PLATE_HW    = 24.0,   # plakanin yarim genisligi (duz kenarlar)
+    PLATE_X1    = 46.0,   # plakanin arka kenari (kapali)
+    TRAVEL      = 42.0,   # acik konum: on kenar x = -22 + 42 = +20 (hazne kenari 19)
+    LIP_W       = 1.0,    # dudagin plakanin altina uzanmasi (radyal); plaka pahi buna oturur
+    SKIRT_T     = 1.6,    # yan etek kalinligi
+    RAIL_X0     = -0.5,   # eteklerin basi
+    RAIL_ZB     = -4.5,   # eteklerin alti
+    GATE_X      = 56.0,   # etekleri sapa baglayan kapi (ust cubuk) x0; 6 mm genis
+    KNOB_Y0     = 7.0,    # itme cikintilari: sapin yaninda |y| 7..13
+    KNOB_Y1     = 13.0,
+    KNOB_L      = 4.0,
+    SFING_X     = 42.0,   # etek yay parmagi (kapali konumda plakanin centigi burada)
+    SFING_W     = 3.0,    # parmak genisligi (x)
+    SFING_ROOT  = 9.0,    # parmagin ust ucu (baglı) z; alt ucu serbest
+    SFING_BUMP  = 0.5,    # tumsek (ice), 45 derece yanakli
+    SLIT        = 0.6,
+    # --- ust kapak mandali --------------------------------------------------------
     TAB_W       = 14.0,   # rijit tirnagin teget genisligi
     TAB_OUT     = 3.2,    # tirnagin kapak kenarindan disari tasmasi
     FINGER_L    = 10.0,   # yay parmagi uzunlugu (teget)
-    FINGER_T    = 1.5,    # alt disk parmagi kalinligi (radyal)
     LEG_T       = 1.2,    # ust kapak bacagi = parmagi kalinligi
     LEG_H       = 3.4,    # bacagin agiz duzleminden asagi sarkmasi
     FOOT_T      = 0.8,    # ayak kalinligi (dudagin altina giren)
@@ -50,24 +66,19 @@ P.update(dict(
     BUMP_W      = 2.4,    # tumsek tabani
     FINGER_CLR  = 0.6,    # parmagin iceri esneme payi (kanalda)
     LOCK_DEG    = 14.0,   # kanalin acisal uzunlugu (kapanmanin son 14 derecesi)
-    WEDGE       = 0.35,   # alt kanal tabani rampasi (giriste bu kadar alcak)
     WEDGE_TOP   = 0.40,   # ust dudak alti rampasi (giriste bu kadar yuksek)
     POST_HALF   = 22.0,   # burnun yarim acisi (pivot etrafinda, 180 merkezli)
-    SKIRT_T     = 1.5,    # kanal dis duvari (tumsek yuvasi bunun icinde)
-    POST_ZB     = -4.0,   # burnun alt yuzu
+    POST_SKIRT  = 1.5,    # kanal dis duvari (tumsek yuvasi bunun icinde)
     # --- sap: ust yuzu agiz duzleminde (ters baskida tablada) ------------------
     HANDLE_L    = 86.0,
     HANDLE_W    = 12.0,
     HANDLE_H    = 8.0,
     # --- huni (govdenin alti) --------------------------------------------------
-    FUN_GAP     = 0.6,    # alt diskin alti ile huni ust halkasi arasi
+    FUN_GAP     = 0.1,    # plakanin alti ile huni ust halkasi arasi (halka plakayi tasir)
     FUN_TOP_RO  = 24.6,   # huni ust halkasi dis yaricap
     FUN_WALL    = 1.4,
     SPOUT_D     = 20.8,   # PCO-1881 ic capi 21.74 -> 0.47 mm/yan bosluk
     SPOUT_L     = 7.0,    # boynun icine giren duz kisim
-    FIN_A0      = 40.0,   # baglanti kanadi (+y tarafi), acisal araligi
-    FIN_A1      = 130.0,
-    FIN_RO      = 26.5,
 ))
 SIZES = B.SIZES
 cup_depth, _r_at, brim_volume, report = B.cup_depth, B._r_at, B.brim_volume, B.report
@@ -156,35 +167,75 @@ def _funnel_void(p):
 
 
 def _funnel(p):
-    """Govdenin altindaki huni + onu flansa baglayan kanat (+y tarafi)."""
+    """Govdenin altindaki huni (kanat yok: dudaklar ve on burun tasir)."""
     zt, ro, w, r_sp, ri, z_co, z_ci, z_end = _fun_dims(p)
-    fun = g.revolve([(r_sp - w, z_end), (r_sp, z_end), (r_sp, z_co), (ro, zt), (ri, zt),
-                     (r_sp - w, z_ci)])
-    fr = p["FIN_RO"]
-    zb = zt - 2.9
-    fin = g.revolve([(p["FLANGE_R"] - 1.0, 2.5), (p["FLANGE_R"], 2.5), (fr, 0.0), (fr, zb),
-                     (ri - (zt - zb) + 0.8, zb), (ri + 0.3, zt), (p["FLANGE_R"] - 1.0, zt)])
-    fin = g.inter(fin, g.sector(0, fr + 1, p["FIN_A0"], p["FIN_A1"], zb - 1, 5))
-    fin = g.diff(fin, g.cyl(p["FLANGE_R"] + p["FIT"], zt, 0.5))                 # diskin yarigi
-    return g.union(fun, fin)
+    return g.revolve([(r_sp - w, z_end), (r_sp, z_end), (r_sp, z_co), (ro, zt), (ri, zt),
+                      (r_sp - w, z_ci)])
 
 
 def _post_rout(size, p):
     h = cup_depth(size, p)
     r_o = _r_at(h, p) + p["WALL"]
-    return p["PIVOT_X"] + max(p["FLANGE_R"] + p["TAB_OUT"], r_o + 2.2 + p["LEG_T"]) + p["FIT"] / 2 + p["SKIRT_T"]
+    return p["PIVOT_X"] + r_o + 2.2 + p["LEG_T"] + p["FIT"] / 2 + p["POST_SKIRT"]
 
 
 def _post(size, p):
-    """Burun: pivot merkezli dilim.  Ust kisim (z 0..h) cidara kadar dolu,
-    alt kisim (POST_ZB..0) yalniz tirnak yolunun altindaki dudak halkasi.
-    Kanallar buna oyulur; dis yuzu pivot dairesidir (kanal duvarina esmerkezli)."""
+    """Burun: onde, pivot merkezli dilim; yalniz ust kapagin mandal kanali icin
+    (agizdan LEG_H+2 asagi).  Dis yuzu pivot dairesidir (kanal duvarina esmerkezli)."""
     h = cup_depth(size, p)
     ro = _post_rout(size, p)
     a0, a1 = 180 - p["POST_HALF"], 180 + p["POST_HALF"]
-    up = g.extrude(_parc(p, 40.0, ro, a0, a1), 0.0, h)
-    lo = g.extrude(_parc(p, p["PIVOT_X"] + p["FLANGE_R"] - 2.0, ro, a0, a1), p["POST_ZB"], 0.0)
-    return g.diff(g.union(up, lo), _funnel_void(p))
+    return g.extrude(_parc(p, 40.0, ro, a0, a1), h - p["LEG_H"] - 2.0, h)
+
+
+def _extrude_x(poly_yz, x0, x1):
+    """(y,z) profilini x boyunca katiya cevirir."""
+    m = g.extrude(poly_yz, 0.0, x1 - x0)
+    m.apply_transform(np.array([[0, 0, 1, x0], [1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 0, 1]], float))
+    return m
+
+
+def _rails(size, p):
+    """Iki yan etek (RAIL_ZB..h, ters baskida tabladan yukselir) + altlarinda
+    45 derece egimli dudaklar + etekleri sapa baglayan kapi cubugu (agiz duzleminde)."""
+    h = cup_depth(size, p)
+    yi = p["PLATE_HW"] + p["FIT"] / 2
+    yo = yi + p["SKIRT_T"]
+    li = p["PLATE_HW"] - p["LIP_W"]
+    zl = -p["DISC_T"] - p["SEAL_GAP"]                    # dudak ucu (plaka bunun 0.1 ustunde)
+    zb = p["RAIL_ZB"]
+    x0, x1 = p["RAIL_X0"], p["PLATE_X1"] + p["TRAVEL"] + 2.0
+    prof = Polygon([(li, zb), (yo, zb), (yo, h), (yi, h), (yi, zl + (yi - li)), (li, zl)])
+    parts = [_extrude_x(prof, x0, x1)]
+    prof_m = Polygon([(-y, z) for y, z in prof.exterior.coords])
+    parts.append(_extrude_x(prof_m, x0, x1))
+    parts.append(g.box(p["GATE_X"], p["GATE_X"] + 6.0, -yo, yo, h - 3.0, h))
+    return g.union(*parts)
+
+
+def _skirt_slits(size, p):
+    """Etek yay parmaklarini olusturan dikey yariklar (her iki etekte)."""
+    yi = p["PLATE_HW"] + p["FIT"] / 2
+    yo = yi + p["SKIRT_T"]
+    x0 = p["SFING_X"]
+    cuts = []
+    for sgn in (1, -1):
+        for xa in (x0 - p["SLIT"], x0 + p["SFING_W"]):
+            cuts.append(g.box(xa, xa + p["SLIT"], min(sgn * (yi - 0.5), sgn * (yo + 0.5)),
+                              max(sgn * (yi - 0.5), sgn * (yo + 0.5)), p["RAIL_ZB"] - 1, p["SFING_ROOT"]))
+    return cuts
+
+
+def _skirt_bumps(p, grow=0.0):
+    """Parmaklarin ic yuzundeki tumsekler (x'te 45 derece yanakli); grow>0 -> plakadaki centik."""
+    yi = p["PLATE_HW"] + p["FIT"] / 2
+    b, e = p["SFING_BUMP"], grow
+    x0, x1 = p["SFING_X"] - e, p["SFING_X"] + p["SFING_W"] + e
+    out = []
+    for sgn in (1, -1):
+        pts = [(x0, yi + 0.3), (x0 + b, yi - b - e), (x1 - b, yi - b - e), (x1, yi + 0.3)]
+        out.append(g.extrude(Polygon([(x, sgn * y) for x, y in pts]), -1.0 - e, 0.0 + e))
+    return out
 
 
 def _handle(p, z0):
@@ -198,29 +249,6 @@ def _handle(p, z0):
     bar.apply_translation((p["PIVOT_X"] + 2.0, 0.0, z0))
     bar = g.diff(bar, g.cyl(2.2, -5, 40).apply_translation((p["PIVOT_X"] + p["HANDLE_L"] + 4.0, 0, 0)))
     return g.inter(bar, g.box(0, p["PIVOT_X"] + p["HANDLE_L"] + 10.0, -10, 10, -10, 40))
-
-
-def _disc_sweep(p, steps=30):
-    """Alt disk govdesinin (r FLANGE_R + FIT/2) 0..75 derecede supurdugu yarik:
-    disk pivot etrafinda dondugu icin -y tarafinda r 24'u asar; burun bununla oyulur."""
-    zt = _fun_dims(p)[0]
-    d = g.extrude(Point(0, 0).buffer(p["FLANGE_R"] + p["FIT"] / 2, resolution=96), zt + 0.02, 0.0)
-    return g.union(*[_rot(d, a, p) for a in np.linspace(0.0, 75.0, steps)])
-
-
-def _bottom_channel(p, steps=44):
-    """Alt tirnak + parmagin (tumseksiz, FIT/2 buyutulmus) kapanmanin son
-    LOCK_DEG+14 derecesinde supurdugu hacim.  Taban kapali konumda
-    -DISC_T-SEAL_GAP'te, girise dogru WEDGE kadar alcalir.  Sonda tumsek yuvasi."""
-    L = _latch_plan(p, p["PIVOT_X"] + p["FLANGE_R"], +1, p["FINGER_T"])
-    plan = L["tab"].union(L["clear"]).buffer(p["FIT"] / 2)
-    z0, z1 = -p["DISC_T"] - p["SEAL_GAP"], p["FIT"] / 2
-    parts = []
-    for a in np.linspace(0.0, p["LOCK_DEG"] + 30.0, steps):
-        extra = p["WEDGE"] * min(1.0, a / p["LOCK_DEG"])
-        parts.append(_rot(g.extrude(plan, z0 - extra, z1), a, p))
-    pocket = g.extrude(L["bump"].buffer(p["FIT"] / 2), z0 - 0.3, z1)
-    return g.union(*parts, pocket)
 
 
 def _top_latch(size, p, bump=True, e=0.0, e_top=None, clear=False, open_top=False):
@@ -260,7 +288,7 @@ def _top_channel(size, p, steps=44):
     return g.union(*parts, pocket)
 
 
-def build_body(size, p=P):
+def build_body(size, p=P, bumps=True):
     h = cup_depth(size, p)
     r_rim = _r_at(h, p)
     w = p["WALL"]
@@ -268,17 +296,20 @@ def build_body(size, p=P):
     fl_r = p["FLANGE_R"]
     flange = g.revolve([(p["BORE"] / 2, 0.0), (fl_r, 0.0), (fl_r, fl_r - p["BORE"] / 2 - w + p["FLANGE_T"]),
                         (p["BORE"] / 2, 2 * fl_r - p["BORE"] - w + p["FLANGE_T"])])     # 45 derece pah
-    body = g.union(wall, flange, _funnel(p), _post(size, p))
+    body = g.union(wall, flange, _funnel(p), _post(size, p), _rails(size, p))
     # mil gobegi: z 0 .. h (ust kapak bunun ustune oturur), sap kokuyle birlesir
     boss = g.cyl(p["BOSS_R"], 0.0, h).apply_translation((p["PIVOT_X"], 0, 0))
     neck = g.extrude(sbox(fl_r - 3.0, -p["BOSS_R"], p["PIVOT_X"], p["BOSS_R"]), 0.0, h)
     body = g.union(body, boss, neck, _handle(p, h - p["HANDLE_H"]))
-    # mil deligi
-    body = g.diff(body, g.cyl(p["PIN_D"] / 2 + p["FIT"] / 2, -5, h + 20).apply_translation((p["PIVOT_X"], 0, 0)))
+    # mil deligi + basi icin gobek altinda havsa (plaka basin altindan gecer, mili tutar)
+    body = g.diff(body, g.cyl(p["PIN_D"] / 2 + p["FIT"] / 2, -5, h + 20).apply_translation((p["PIVOT_X"], 0, 0)),
+                  g.cyl(p["PIN_D"] / 2 + 2.0 + p["FIT"] / 2, -1, 1.3).apply_translation((p["PIVOT_X"], 0, 0)))
     # O-ring yuvasi (oturma yuzeyinde)
     body = g.diff(body, g.tube(p["ORING_R"] - p["ORING_GW"] / 2, p["ORING_R"] + p["ORING_GW"] / 2, -0.1, p["ORING_GD"]))
-    # mandal kanallari (burna oyulur)
-    body = g.diff(body, _disc_sweep(p), _bottom_channel(p), _top_channel(size, p))
+    # ust mandal kanali (burna oyulur), etek yariklari, etek tumsekleri
+    body = g.diff(body, _top_channel(size, p), *_skirt_slits(size, p))
+    if bumps:
+        body = g.union(body, *_skirt_bumps(p))
     # hazne bosluğu en sonda
     top = h + 10.0
     body = g.diff(body, g.revolve([(0, -0.2), (p["BORE"] / 2, -0.2), (p["BORE"] / 2, 0), (r_rim, h),
@@ -287,18 +318,29 @@ def build_body(size, p=P):
 
 
 # ===========================================================================
-# ALT DISK  (baski: alt yuzu tablada; tirnak ve parmak disk duzleminde)
+# TABAN PLAKASI  (baski: conta yuzu tablada, itme cikintilari yukari)
 # ===========================================================================
-def build_bottom(p=P, opened=False, bump=True):
-    L = _latch_plan(p, p["PIVOT_X"] + p["FLANGE_R"], +1, p["FINGER_T"])
-    plan = _disc_plan(p["FLANGE_R"], p).union(L["tab"]).union(L["finger"])
-    if bump:
-        plan = plan.union(L["bump"])
-    disc = g.extrude(plan.buffer(0), -p["DISC_T"], 0.0)
-    # mil deligi + basi icin havsa (bas diskin altina gomulur)
-    disc = g.diff(disc, g.cyl(p["PIN_D"] / 2 + p["FIT"] / 2, -10, 5).apply_translation((p["PIVOT_X"], 0, 0)),
-                  g.cyl(p["PIN_D"] / 2 + 2.2, -p["DISC_T"] - 1, -p["DISC_T"] + 1.3).apply_translation((p["PIVOT_X"], 0, 0)))
-    return _rot(disc, p["OPEN_DEG"], p) if opened else disc
+def build_plate(size, p=P, opened=False, notches=True):
+    h = cup_depth(size, p)
+    hw, t = p["PLATE_HW"], p["DISC_T"]
+    plan = Point(0, 0).buffer(p["PLATE_RF"], resolution=128).union(sbox(0.0, -hw, p["PLATE_X1"], hw)).buffer(0)
+    plate = g.extrude(plan, -t, 0.0)
+    # duz kenarlarin alt pahi: (hw-LIP_W-0.15, -t) -> 45 derece, dudagin egiminin 0.18 mm ustunde
+    c0 = hw - p["LIP_W"] - 0.15
+    cham = Polygon([(c0 - 0.1, -t - 0.1), (c0, -t), (hw + 0.3, -t + (hw + 0.3 - c0)), (hw + 0.6, -t + (hw + 0.3 - c0)),
+                    (hw + 0.6, -t - 0.1)])
+    plate = g.diff(plate, _extrude_x(cham, -1.0, p["PLATE_X1"] + 1.0),
+                   _extrude_x(Polygon([(-y, z) for y, z in cham.exterior.coords]), -1.0, p["PLATE_X1"] + 1.0))
+    # itme cikintilari (sapin iki yaninda, kapi cubugunun altindan gecer)
+    for sgn in (1, -1):
+        plate = g.union(plate, g.box(p["PLATE_X1"] - p["KNOB_L"], p["PLATE_X1"], sgn * p["KNOB_Y0"], sgn * p["KNOB_Y1"],
+                                     -0.5, h - 3.5))
+    if notches:                                             # kapali (x = SFING_X) ve acik (x - TRAVEL)
+        for dx in (0.0, -p["TRAVEL"]):
+            plate = g.diff(plate, *[b.apply_translation((dx, 0, 0)) for b in _skirt_bumps(p, grow=p["FIT"] / 2)])
+    if opened:
+        plate.apply_translation((p["TRAVEL"], 0, 0))
+    return plate
 
 
 # ===========================================================================
