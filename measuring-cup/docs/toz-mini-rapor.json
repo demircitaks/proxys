@@ -3,65 +3,70 @@
     "BORE": 38.0,
     "DRAFT": 7.0,
     "WALL": 2.0,
-    "FLOOR_T": 1.6,
     "FIT": 0.3,
-    "HOLE_D": 22.0,
-    "HOLE_X": -7.0,
-    "SEAT_ID": 28.3,
-    "SEAT_H": 1.6,
-    "SHUT_T": 3.0,
-    "SKIRT_T": 1.4,
-    "SKIRT_H": 2.6,
+    "SLAB_BOT": 1.2,
+    "CH_H": 2.35,
+    "FLOOR_T": 1.6,
+    "HOLE_D": 21.0,
+    "HOLE_X": -8.5,
+    "PL_HW": 14.0,
+    "PL_RF": 20.5,
+    "PL_X1": 5.0,
+    "PL_T": 1.9,
+    "TRAVEL": 24.0,
+    "STEM_HW": 4.0,
+    "TAB_X0": 36.0,
+    "TAB_L": 6.0,
+    "TAB_H": 8.5,
+    "FING_L": 14.0,
+    "FING_T": 2.0,
+    "FING_SLOT": 0.6,
+    "BUMP": 0.5,
+    "BUMP_W": 2.5,
+    "BUMP_X": -12.0,
     "GROOVE_D": 0.5,
-    "GROOVE_Z": [
-      1.3,
-      2.3
-    ],
-    "LIP": 0.4,
-    "DET": 0.35,
-    "DET_W": 2.0,
-    "EAR_W": 6.0,
-    "EAR_OUT": 4.0,
     "CAP_T": 1.6,
     "CAP_SKIRT": 4.0,
     "CAP_GROOVE": [
       3.0,
       2.0
     ],
+    "SKIRT_T": 1.4,
+    "EAR_W": 6.0,
+    "EAR_OUT": 4.0,
     "HANDLE_L": 55.0,
-    "HANDLE_W": 10.0,
-    "HANDLE_H": 6.0,
-    "GUSSET_TOP": 8.5
+    "HANDLE_W": 16.0,
+    "HANDLE_H": 6.5
   },
   "parcalar": [
     {
       "dosya": "01-hazne-15ml.stl",
       "not_": "Baski: TABAN TABLADA (agiz yukari), sap tablada. Destek yok.",
-      "hacim_cm3": 7.98,
+      "hacim_cm3": 10.68,
       "olcu_mm": [
-        100.6,
+        98.5,
         45.0,
-        13.8
+        17.4
       ]
     },
     {
       "dosya": "01-hazne-30ml.stl",
       "not_": "Baski: TABAN TABLADA (agiz yukari).",
-      "hacim_cm3": 10.81,
+      "hacim_cm3": 13.84,
       "olcu_mm": [
-        101.9,
+        99.8,
         47.6,
-        24.5
+        28.0
       ]
     },
     {
-      "dosya": "02-taban-kapagi.stl",
-      "not_": "Baski: ALT YUZ TABLADA (duz), etek yukari. Ortak.",
-      "hacim_cm3": 3.91,
+      "dosya": "02-surgu.stl",
+      "not_": "Baski: ALT YUZ TABLADA, basparmak surgusu yukari. Ortak.",
+      "hacim_cm3": 2.06,
       "olcu_mm": [
-        45.1,
-        49.1,
-        5.6
+        62.5,
+        29.0,
+        7.3
       ]
     },
     {
@@ -87,38 +92,42 @@
   ],
   "dogrulama": {
     "15 mL": {
-      "kapak_donus_mm3": 0.0,
-      "centik_esneme_mm3": 0.839,
-      "acik_mm3": 0.0,
+      "surgu_kayma_mm3": 0.0,
+      "centik_esneme_mm3": 2.286,
       "kapali_mm3": 0.0,
+      "acik_mm3": 0.0,
       "ust_kapak_mm3": 0.0,
+      "acikken_delik_ortusu_mm3": 0.0,
+      "kapaliyken_delik_ortusu_oran": 1.0,
       "derinlik_mm": 12.23,
       "hacim_ml": 15.0
     },
     "30 mL": {
-      "kapak_donus_mm3": 0.0,
-      "centik_esneme_mm3": 0.839,
-      "acik_mm3": 0.0,
+      "surgu_kayma_mm3": 0.0,
+      "centik_esneme_mm3": 2.286,
       "kapali_mm3": 0.0,
+      "acik_mm3": 0.0,
       "ust_kapak_mm3": 0.0,
+      "acikken_delik_ortusu_mm3": 0.0,
+      "kapaliyken_delik_ortusu_oran": 1.0,
       "derinlik_mm": 22.9,
       "hacim_ml": 30.0
     },
     "baski_cikintilari": {
       "hazne_15": {
-        "sorunlu_mm2": 135.7,
-        "yuzde": 1.74,
-        "koprü_mm2": 129.9
+        "sorunlu_mm2": 1052.9,
+        "yuzde": 9.28,
+        "koprü_mm2": 1052.9
       },
       "hazne_30": {
-        "sorunlu_mm2": 141.1,
-        "yuzde": 1.31,
-        "koprü_mm2": 136.0
+        "sorunlu_mm2": 1055.1,
+        "yuzde": 7.34,
+        "koprü_mm2": 1055.1
       },
-      "taban_kapagi": {
-        "sorunlu_mm2": 251.2,
-        "yuzde": 6.34,
-        "koprü_mm2": 251.2
+      "surgu": {
+        "sorunlu_mm2": 0.0,
+        "yuzde": 0.0,
+        "koprü_mm2": 0.0
       },
       "ust_kapak_15": {
         "sorunlu_mm2": 104.3,

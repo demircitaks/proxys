@@ -29,20 +29,26 @@ def iv(a, b):
 
 def verify(p=S.P):
     out = {}
-    sh, sh0 = S.build_shutter(p), S.build_shutter(p, notches=False)
+    pl, pl0 = S.build_plate(p), S.build_plate(p, bumps=False)
+    hole = g.cyl(p["HOLE_D"] / 2, 0, 6).apply_translation((p["HOLE_X"], 0, 0))
     for size in S.SIZES:
-        c, c0, cap = S.build_cup(size, p), S.build_cup(size, p, bumps=False), S.build_cap(size, p)
+        c, c0, cap = S.build_cup(size, p), S.build_cup(size, p, pockets=False), S.build_cap(size, p)
         w = wb = 0.0
-        for a in np.arange(1.0, 180.01, 1.0):
-            w = max(w, iv(c0, g.rotz(sh0, a))); wb = max(wb, iv(c, g.rotz(sh, a)))
+        for dx in np.arange(0.5, p["TRAVEL"] + 0.01, 0.5):
+            m0 = pl0.copy(); m0.apply_translation((dx, 0, 0)); w = max(w, iv(c0, m0))
+            m = pl.copy(); m.apply_translation((dx, 0, 0)); wb = max(wb, iv(c, m))
+        po = S.build_plate(p, opened=True)
         d = S.dims(size, p)
-        out["%d mL" % size] = dict(kapak_donus_mm3=round(w, 3), centik_esneme_mm3=round(wb, 3),
-                                   acik_mm3=round(iv(c, sh), 3), kapali_mm3=round(iv(c, S.build_shutter(p, opened=False)), 3),
-                                   ust_kapak_mm3=round(iv(c, cap), 3), derinlik_mm=round(d["depth"], 2),
+        out["%d mL" % size] = dict(surgu_kayma_mm3=round(w, 3), centik_esneme_mm3=round(wb, 3),
+                                   kapali_mm3=round(iv(c, pl), 3), acik_mm3=round(iv(c, po), 3),
+                                   ust_kapak_mm3=round(iv(c, cap), 3),
+                                   acikken_delik_ortusu_mm3=round(iv(po, hole), 3),
+                                   kapaliyken_delik_ortusu_oran=round(iv(pl, hole) / (np.pi * (p["HOLE_D"] / 2) ** 2 * p["PL_T"]), 3),
+                                   derinlik_mm=round(d["depth"], 2),
                                    hacim_ml=round(S.B.brim_volume(d["depth"], dict(S.B.P, BORE=p["BORE"], DRAFT=p["DRAFT"])) / 1000, 4))
     oh = {}
     for nm, m in (("hazne_15", on_bed(S.build_cup(15, p))), ("hazne_30", on_bed(S.build_cup(30, p))),
-                  ("taban_kapagi", on_bed(sh)), ("ust_kapak_15", on_bed(flip(S.build_cap(15, p))))):
+                  ("surgu", on_bed(pl)), ("ust_kapak_15", on_bed(flip(S.build_cap(15, p))))):
         r = K.overhang_report(m)
         oh[nm] = dict(sorunlu_mm2=round(r["sorunlu_alan"], 1), yuzde=round(100 * r["sorunlu_oran"], 2), koprü_mm2=round(r["yatay_tavan"], 1))
     out["baski_cikintilari"] = oh
@@ -53,7 +59,7 @@ def main(render_png=True):
     os.makedirs(STL, exist_ok=True)
     parts = [("01-hazne-15ml.stl", on_bed(S.build_cup(15)), "Baski: TABAN TABLADA (agiz yukari), sap tablada. Destek yok."),
              ("01-hazne-30ml.stl", on_bed(S.build_cup(30)), "Baski: TABAN TABLADA (agiz yukari)."),
-             ("02-taban-kapagi.stl", on_bed(S.build_shutter()), "Baski: ALT YUZ TABLADA (duz), etek yukari. Ortak."),
+             ("02-surgu.stl", on_bed(S.build_plate()), "Baski: ALT YUZ TABLADA, basparmak surgusu yukari. Ortak."),
              ("03-ust-kapak-15ml.stl", on_bed(flip(S.build_cap(15))), "Baski: DIS YUZU TABLADA, etek yukari."),
              ("03-ust-kapak-30ml.stl", on_bed(flip(S.build_cap(30))), "Baski: DIS YUZU TABLADA, etek yukari.")]
     report = {"parametreler": dict(S.P), "parcalar": []}
@@ -74,7 +80,7 @@ def main(render_png=True):
             cup = S.build_cup(size)
             for state in ("kapali", "acik"):
                 op = state == "acik"
-                parts3 = [paint(cup, COL["h"]), paint(S.build_shutter(opened=op), COL["p"])]
+                parts3 = [paint(cup, COL["h"]), paint(S.build_plate(opened=op), COL["p"])]
                 if not op:
                     parts3.append(paint(S.build_cap(size), COL["l"]))
                 asm = trimesh.util.concatenate(parts3)
@@ -85,12 +91,12 @@ def main(render_png=True):
                 grid = Image.new("RGB", (420 * 3, 420 * 2), (250, 250, 248))
                 for i, t in enumerate(tiles): grid.paste(t, ((i % 3) * 420, (i // 3) * 420))
                 grid.save(os.path.join(DOCS, "mini-%dml-%s.png" % (size, state)))
-        render.render_row([S.build_cup(15), S.build_shutter(), flip(S.build_cap(15))],
+        render.render_row([S.build_cup(15), S.build_plate(), flip(S.build_cap(15))],
                           os.path.join(DOCS, "mini-parcalar.png"), size=440, colors=[COL["h"], COL["p"], COL["l"]], elev=22, azim=35)
-        hero = trimesh.util.concatenate([paint(S.build_cup(15), COL["h"]), paint(S.build_shutter(), COL["p"]), paint(S.build_cap(15), COL["l"])])
+        hero = trimesh.util.concatenate([paint(S.build_cup(15), COL["h"]), paint(S.build_plate(), COL["p"]), paint(S.build_cap(15), COL["l"])])
         render.render(hero, os.path.join(DOCS, "mini-kepce.png"), size=800, elev=24, azim=35, color=None)
-        # acik: ust kapak yok, taban kapagi 180 cevrilmis, alttan bakis
-        hero2 = trimesh.util.concatenate([paint(S.build_cup(15), COL["h"]), paint(S.build_shutter(opened=True), COL["p"])])
+        # acik: ust kapak yok, surgu cekilmis, alttan bakis
+        hero2 = trimesh.util.concatenate([paint(S.build_cup(15), COL["h"]), paint(S.build_plate(opened=True), COL["p"])])
         render.render(hero2, os.path.join(DOCS, "mini-acik-alt.png"), size=800, elev=-30, azim=35, color=None)
     print("STL ->", STL)
     return report
