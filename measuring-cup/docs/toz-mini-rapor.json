@@ -4,10 +4,13 @@
     "DRAFT": 7.0,
     "WALL": 2.0,
     "FIT": 0.3,
-    "SLAB_BOT": 1.2,
+    "SLAB_BOT": 1.8,
     "CH_H": 2.3,
     "FLOOR_T": 1.6,
     "HOLE_D": 22.0,
+    "SPOUT_OD": 20.6,
+    "SPOUT_WALL": 1.1,
+    "SPOUT_L": 8.0,
     "FUN_A": 45.0,
     "FUN_R1": 19.0,
     "BASE_R": 17.5,
@@ -44,21 +47,21 @@
     {
       "dosya": "01-hazne-15ml.stl",
       "not_": "Model: sap ustte. Baski: 180 cevir -> AGIZ TABLADA, sap tablada, huni yukari. Destek yok.",
-      "hacim_cm3": 12.55,
+      "hacim_cm3": 13.59,
       "olcu_mm": [
         100.4,
         43.9,
-        20.8
+        29.4
       ]
     },
     {
       "dosya": "01-hazne-30ml.stl",
       "not_": "Model: sap ustte. Baski: 180 cevir -> AGIZ TABLADA.",
-      "hacim_cm3": 16.03,
+      "hacim_cm3": 17.08,
       "olcu_mm": [
         103.2,
         46.7,
-        32.0
+        40.6
       ]
     },
     {
@@ -113,7 +116,7 @@
       "acikken_delik_ortusu_mm3": 0.0,
       "kapaliyken_delik_ortusu_oran": 1.0,
       "derinlik_mm": 15.73,
-      "yukseklik_mm": 20.83,
+      "yukseklik_mm": 21.43,
       "hacim_ml": 15.0
     },
     "30 mL": {
@@ -126,19 +129,19 @@
       "acikken_delik_ortusu_mm3": 0.0,
       "kapaliyken_delik_ortusu_oran": 1.0,
       "derinlik_mm": 26.94,
-      "yukseklik_mm": 32.04,
+      "yukseklik_mm": 32.64,
       "hacim_ml": 30.0
     },
     "baski_cikintilari": {
       "hazne_15": {
-        "sorunlu_mm2": 548.8,
-        "yuzde": 5.67,
-        "koprü_mm2": 548.8
+        "sorunlu_mm2": 549.5,
+        "yuzde": 5.01,
+        "koprü_mm2": 549.5
       },
       "hazne_30": {
-        "sorunlu_mm2": 544.8,
-        "yuzde": 4.26,
-        "koprü_mm2": 544.8
+        "sorunlu_mm2": 545.5,
+        "yuzde": 3.88,
+        "koprü_mm2": 545.5
       },
       "surgu_15": {
         "sorunlu_mm2": 0.0,

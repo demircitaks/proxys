@@ -3,8 +3,9 @@
 - HAZNE: yuvarlak, ust kismi 7 derece konik, altta 45 derecelik HUNI; en altta
   Ø22 aciklik = tabanin tamami (duz taban yok).  Aciklik, haznenin altindaki
   ince TABAN LEVHASININ (alt deri + surgu kanali + ust deri) icinden gecer.
-  Dis yuz altta 45 derece pahli (hafif huni).  SAP AGIZ HIZASINDA, cidara
-  bagli; kokunde catal yarigi (surgunun ayagi icinden gecer).
+  Dis yuz altta 45 derece pahli (hafif huni).  Acikligin altinda 45 derece
+  koniyle daralan Ø20.6 BORU: 500 mL pet su sisesinin boynuna 8 mm girer
+  (disari dokulmez).  SAP AGIZ HIZASINDA, cidara bagli; kokunde catal yarigi.
 - SURGU (taban plakasi): kanalda kayan DELIKSIZ plaka + arkaya uzanan kol +
   haznenin disinda dik yukselen AYAK + sapin ustunde tirtikli basparmak
   surgusu.  Kapali: plaka acikligin altinda, yay parmaklari kanal duvarindaki
@@ -24,8 +25,9 @@ import scoop_slide as B
 
 P = dict(
     BORE=38.0, DRAFT=7.0, WALL=2.0, FIT=0.3,
-    SLAB_BOT=1.2, CH_H=2.3, FLOOR_T=1.6,            # taban levhasi katlari (alt deri, kanal, ust deri)
+    SLAB_BOT=1.8, CH_H=2.3, FLOOR_T=1.6,            # taban levhasi katlari (alt deri, kanal, ust deri)
     HOLE_D=22.0,                                     # en alttaki aciklik (merkezde) = tabanin tamami
+    SPOUT_OD=20.6, SPOUT_WALL=1.1, SPOUT_L=8.0,      # sise boynuna GIREN boru (PCO-1881 ic Ø21.74, 26/22 ~21.4)
     FUN_A=45.0, FUN_R1=19.0,                         # huni: aciklik yaricapindan FUN_R1'e 45 derece, sonra 7 derece cidar
     BASE_R=17.5,                                     # taban levhasi yaricapi (haznenin altindaki daire)
     PL_HW=13.0, PL_RF=17.0, PL_X1=11.0, PL_T=2.0,    # plaka: yarim genislik, on yaricap, arka kenar, kalinlik
@@ -123,10 +125,14 @@ def build_cup(size, p=P, pockets=True):
     cup = g.revolve(outer + inner)
     base = g.cyl(rb, 0.0, f0)
     cup = g.union(cup, base, _handle(size, p))
-    # aciklik levhanin icinden asagi: ust deri duz, alt deri 45 derece havsali (sise agzi ortalanir)
+    # aciklik levhanin icinden asagi; alt deride 45 derece koni -> sise boynuna giren boru
     z_ch0, z_ch1 = p["SLAB_BOT"], p["SLAB_BOT"] + p["CH_H"]
-    cup = g.diff(cup, g.cyl(rh, -1, f0 + 0.5),
-                 g.revolve([(0, -0.1), (rh + p["SLAB_BOT"] + 0.1, -0.1), (rh, p["SLAB_BOT"]), (0, p["SLAB_BOT"])]))
+    r_so = p["SPOUT_OD"] / 2
+    r_si = r_so - p["SPOUT_WALL"]
+    cup = g.union(cup, g.tube(r_si, r_so, -p["SPOUT_L"], 0.2))
+    cup = g.diff(cup, g.cyl(rh, z_ch0 - 0.01, f0 + 0.5), g.cyl(r_si, -p["SPOUT_L"] - 1, z_ch0),
+                 g.revolve([(0, z_ch0 - (rh - r_si) - 0.01), (r_si, z_ch0 - (rh - r_si) - 0.01), (rh + 0.01, z_ch0 + 0.01),
+                            (0, z_ch0 + 0.01)]))
     # surgu kanali: plakanin plani (FIT payli) kapali..acik supurmesi + kol yarigi + surgu yarigi ustte
     plan = _plate_plan(p, p["FIT"] / 2).union(sbox(0, -p["PL_HW"] - p["FIT"] / 2, rb + 5.0, p["PL_HW"] + p["FIT"] / 2))
     cup = g.diff(cup, g.extrude(plan.buffer(0), z_ch0, z_ch1))

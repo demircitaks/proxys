@@ -6,7 +6,7 @@
 
 | Parça | Ne yapar |
 |---|---|
-| **Hazne** | Yuvarlak; üst kısmı 7° konik, altta **45° huni**, en altta **Ø22 açıklık = tabanın tamamı** (düz taban yok). 15 mL için 15,7 mm, 30 mL için 26,9 mm derin (huni hacim aldığı için). Dışı altta 45° pahlı (hafif huni görünümü). Açıklık, haznenin altındaki ince taban levhasının (alt deri + **sürgü kanalı** + üst deri) içinden geçer; en altta 45° havşa (şişe ağzı ortalanır). **Sap ağız hizasında**, cidara bağlı; 58 mm, asma delikli; kökünde sürgü ayağının geçtiği çatal yarığı. |
+| **Hazne** | Yuvarlak; üst kısmı 7° konik, altta **45° huni**, en altta **Ø22 açıklık = tabanın tamamı** (düz taban yok). 15 mL için 15,7 mm, 30 mL için 26,9 mm derin (huni hacim aldığı için). Dışı altta 45° pahlı (hafif huni görünümü). Açıklık, haznenin altındaki ince taban levhasının (alt deri + **sürgü kanalı** + üst deri) içinden geçer ve 45° koniyle **Ø20,6 × 8 mm boruya** iner: boru 500 mL PET su şişesinin boynuna (PCO-1881 iç Ø21,74; hafif 26/22 boyun ~21,4) 0,4–0,6 mm boşlukla **girer**, toz dışarı dökülmez. **Sap ağız hizasında**, cidara bağlı; 58 mm, asma delikli; kökünde sürgü ayağının geçtiği çatal yarığı. |
 | **Sürgü** (taban plakası) | Kanalda kayan **deliksiz** plaka + arkaya uzanan kol + haznenin dışında dik yükselen **ayak** + sapın üstünde tırtıklı **başparmak sürgüsü**. Kapalıyken plaka açıklığın altında, yay parmakları kanal duvarındaki yuvaya oturur (klik); sürgüyü **29 mm kendine çek** → açıklık tamamen açılır, ayak çatalın sonuna dayanır; ileri it → klik, kapalı. Ayak boyu hazneye göre (15/30 ayrı). |
 | **Üst kapak** | Ağza klik diye geçen düz kapak, kulaklı; eteği sap hizasında kesik (klik 320°'de). |
 
@@ -57,8 +57,11 @@ Ayrıntı: `BASKI-KILAVUZU.pdf`. Sürgü sıkıysa `FIT` 0,30 → 0,40; klik zay
 ## Notlar
 
 - Hacim ölçer, gram değil: 15 mL ≈ 5–8 g, 30 mL ≈ 10–17 g. Bir kez tartın.
-- Açıklık Ø22, huni 45°: toz kendi ağırlığıyla akar, gerekirse tıklatın. Düz
-  taban olmadığı için köşede toz kalmaz.
+- Açıklık Ø22, huni 45°, boru içi Ø18,4: toz kendi ağırlığıyla akar, gerekirse
+  tıklatın. Düz taban olmadığı için köşede toz kalmaz.
+- Boru altta 8 mm çıkıntı yaptığı için kepçe masaya düz oturmaz; kutunun
+  içinde veya kapağının üstünde durur. Boru sığmayan (iç çapı < 20,8) boyun
+  görürsen `SPOUT_OD` 20,6 → 20,0.
 - Plaka ile üst deri arası düz-düz temas (0,3 mm boşluk); toz için yeterli,
   sıvı için değil. Kapalıyken plakada delik yok: çantada dökülmez.
 - FDM gıda sertifikasız; elde yıkayın.

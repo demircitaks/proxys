@@ -51,11 +51,12 @@ def main():
     W = A4[0] - 32 * mm
     el = [P("Mini toz kepçesi 15 / 30 mL — 3D baskı kılavuzu (Bambu Lab X1C)", H1),
           P("Üç parça: huni tabanlı hazne (en altta Ø22 açıklık = tabanın tamamı), taban levhasının içindeki kanalda kayan "
-            "deliksiz sürgü, üst kapak. Sap ağız hizasında. Pim, O-ring, destek yok. Sapın üstündeki başparmak sürgüsünü "
-            "29 mm kendine çekince açıklık tamamen açılır, toz şişeye akar.", B),
+            "deliksiz sürgü, üst kapak. Sap ağız hizasında; açıklığın altındaki Ø20,6 × 8 mm boru 500 mL PET su şişesinin "
+            "boynuna girer. Pim, O-ring, destek yok. Sapın üstündeki başparmak sürgüsünü 29 mm kendine çekince açıklık "
+            "tamamen açılır, toz şişeye akar.", B),
           Spacer(1, 6), img("mini-kepce.png", W * 0.5), Spacer(1, 4),
           P("1. Parçalar ve baskı yönü", H2)]
-    orient = {"01-hazne-15ml.stl": ("1", "180° ÇEVİR: ağız ve sap tablada, huni yukarı. (stl/toz-mini/baski/ içindeki kopya zaten çevrili.)"),
+    orient = {"01-hazne-15ml.stl": ("1", "180° ÇEVİR: ağız ve sap tablada, huni ve boru yukarı. (stl/toz-mini/baski/ içindeki kopya zaten çevrili.)"),
               "01-hazne-30ml.stl": ("1", "Aynı: 180° çevir."),
               "02-surgu-15ml.stl": ("1", "Olduğu gibi: plaka tablada, ayak dik yukarı (24 mm)."),
               "02-surgu-30ml.stl": ("1", "Olduğu gibi (ayak 35 mm)."),
@@ -96,7 +97,8 @@ def main():
             ["Sürgü sıkı / takılıyor", "FIT 0,30 → 0,40; kanal tavanı sarkmışsa CH_H 2,35 → 2,6"],
             ["Sürgü gevşek, klik hissedilmiyor", "BUMP 0,5 → 0,6 veya FING_T 2,0 → 2,4"],
             ["Üst kapak takılmıyor / gevşek", "GROOVE_D 0,5 → 0,6 / 0,4"],
-            ["Toz geç akıyor", "FUN_A 45 → 55 (huni dikleşir) veya HOLE_D 22 → 24 (PL_HW 13 → 14)"]]
+            ["Toz geç akıyor", "FUN_A 45 → 55 (huni dikleşir) veya HOLE_D 22 → 24 (PL_HW 13 → 14)"],
+            ["Boru şişe boynuna girmiyor", "SPOUT_OD 20,6 → 20,0 (PCO-1881 iç Ø21,74; bazı hafif boyunlar 21,4)"]]
     el += [tbl(rows, [70 * mm, W - 70 * mm]), Spacer(1, 4),
            P("Yeniden üretim: <b>python3 cad/build_mini.py</b> → STL'ler <b>stl/toz-mini/</b>; bu belge <b>python3 cad/print_doc.py</b>.", S),
            P("5. Doğrulama (rapordan)", H2)]
