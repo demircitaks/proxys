@@ -1,19 +1,19 @@
 """MINI kepce: 3 parca, pim/O-ring yok, destek yok.
 
-- HAZNE: yuvarlak, Ø38 tabanli, 7 derece konik.  Tabani uc katli bir levha:
-  alt deri (1.2) + SURGU KANALI (2.35) + ust deri (1.6).  Iki deride de one
-  dogru kaydirilmis Ø21 delik (altta 45 derece havsali: sise agzi ortalanir).
-  Kanal, cidarin dibinden gecip sapin icine devam eder; sapin ustunde surgu
-  yarigi vardir.  Sap tabanla ayni duzlemde (tablada basilir).
-- SURGU (taban plakasi): kanalda kayan DELIKSIZ plaka (onu yuvarlak) + sapin
-  icinden gecen kol + sapin ustunden cikan tirtikli basparmak surgusu.
-  Kapali: plaka deligin altinda.  Surguyu TRAVEL kadar kendine cek: delik
-  acilir, toz asagi.  Plakanin iki yanindaki yay parmaklari kanal duvarindaki
-  yuvalara kapali ve acik konumda oturur (klik).
+- HAZNE: yuvarlak, ust kismi 7 derece konik, altta 45 derecelik HUNI; en altta
+  Ø22 aciklik = tabanin tamami (duz taban yok).  Aciklik, haznenin altindaki
+  ince TABAN LEVHASININ (alt deri + surgu kanali + ust deri) icinden gecer;
+  levha sapin kokune kadar uzanir.  Dis yuz altta 45 derece pahli (hafif huni).
+  Kanal levhanin icinden sapin icine devam eder; sapin ustunde surgu yarigi.
+- SURGU (taban plakasi): kanalda kayan DELIKSIZ plaka + sapin icinden gecen kol
+  + sapin ustunden cikan tirtikli basparmak surgusu.  Kapali: plaka acikligin
+  altinda.  Surguyu TRAVEL kadar kendine cek: aciklik tamamen acilir, toz asagi.
+  Plakanin iki yanindaki yay parmaklari kanal duvarindaki yuvalara kapali ve
+  acik konumda oturur (klik).
 - UST KAPAK: agza klik diye gecen duz kapak (saklama), kulakli.
-z = 0 haznenin alt yuzu; ic taban z = FLOOR0 = SLAB_BOT + CH_H + FLOOR_T.
+z = 0 haznenin alt yuzu; huni agzi (aciklik) z = FLOOR0 = SLAB_BOT + CH_H + FLOOR_T.
 Baski: hazne TABAN TABLADA (agiz yukari), surgu alt yuzu tablada, kapak dis
-yuzu tablada.  Tek kopru: kanal tavani (28 mm, haznenin ic tabani).
+yuzu tablada.  Kopru: kanal tavani (26 mm).
 """
 import numpy as np
 import trimesh
@@ -24,16 +24,18 @@ import scoop_slide as B
 
 P = dict(
     BORE=38.0, DRAFT=7.0, WALL=2.0, FIT=0.3,
-    SLAB_BOT=1.2, CH_H=2.35, FLOOR_T=1.6,           # taban levhasi katlari
-    HOLE_D=21.0, HOLE_X=-8.5,                        # delik (one dogru)
-    PL_HW=14.0, PL_RF=20.5, PL_X1=5.0, PL_T=1.9,     # plaka: yarim genislik, on yaricap, arka kenar, kalinlik
-    TRAVEL=24.0,
+    SLAB_BOT=1.2, CH_H=2.3, FLOOR_T=1.6,            # taban levhasi katlari (alt deri, kanal, ust deri)
+    HOLE_D=22.0,                                     # en alttaki aciklik (merkezde) = tabanin tamami
+    FUN_A=45.0, FUN_R1=19.0,                         # huni: aciklik yaricapindan FUN_R1'e 45 derece, sonra 7 derece cidar
+    BASE_R=17.5, BASE_X1=45.0, BASE_HW=15.0,         # taban levhasi: haznenin altindaki daire + sapin kokune uzanan dil
+    PL_HW=13.0, PL_RF=17.0, PL_X1=11.0, PL_T=2.0,    # plaka: yarim genislik, on yaricap, arka kenar, kalinlik
+    TRAVEL=29.0,
     STEM_HW=4.0,                                     # kol yarim genisligi (sapin icinden gecer)
-    TAB_X0=36.0, TAB_L=6.0, TAB_H=8.5,               # basparmak surgusu (kapali konum x0, uzunluk, ust z)
+    TAB_X0=30.0, TAB_L=6.0, TAB_H=8.5,               # basparmak surgusu (kapali konum x0, uzunluk, ust z)
     FING_L=14.0, FING_T=2.0, FING_SLOT=0.6,          # yay parmagi (plakanin yan kenarinda, arkadan bagli)
-    BUMP=0.5, BUMP_W=2.5, BUMP_X=-12.0,              # tumsek (disa), kapali konumdaki x0
+    BUMP=0.5, BUMP_W=2.5, BUMP_X=-3.0,               # tumsek (disa), kapali konumdaki x0
     GROOVE_D=0.5, CAP_T=1.6, CAP_SKIRT=4.0, CAP_GROOVE=(3.0, 2.0), SKIRT_T=1.4, EAR_W=6.0, EAR_OUT=4.0,
-    HANDLE_L=55.0, HANDLE_W=16.0, HANDLE_H=6.5,
+    HANDLE_L=58.0, HANDLE_W=16.0, HANDLE_H=6.5,
 )
 SIZES = (15, 30)
 cup_depth = B.cup_depth
@@ -43,14 +45,34 @@ def _floor0(p=P):
     return p["SLAB_BOT"] + p["CH_H"] + p["FLOOR_T"]
 
 
+def _fun_h(p=P):
+    return (p["FUN_R1"] - p["HOLE_D"] / 2) / np.tan(np.radians(p["FUN_A"]))
+
+
+def _fun_vol(p=P):
+    r0, r1, h = p["HOLE_D"] / 2, p["FUN_R1"], _fun_h(p)
+    return np.pi * h / 3 * (r0 * r0 + r0 * r1 + r1 * r1)
+
+
 def _r_at(z_in, p=P):
-    return p["BORE"] / 2 + z_in * np.tan(np.radians(p["DRAFT"]))
+    """Ic yaricap, huni agzindan (aciklik) z_in yukarida."""
+    h = _fun_h(p)
+    if z_in <= h:
+        return p["HOLE_D"] / 2 + z_in * np.tan(np.radians(p["FUN_A"]))
+    return p["FUN_R1"] + (z_in - h) * np.tan(np.radians(p["DRAFT"]))
 
 
 def dims(size, p=P):
-    d = cup_depth(size, dict(B.P, BORE=p["BORE"], DRAFT=p["DRAFT"]))
+    """Derinlik: huni + 7 derecelik kisim = size mL (silme)."""
+    pb = dict(B.P, BORE=2 * p["FUN_R1"], DRAFT=p["DRAFT"])
+    v_up = size * 1000.0 - _fun_vol(p)
+    lo, hi = 0.1, 200.0
+    for _ in range(200):
+        m = (lo + hi) / 2
+        lo, hi = (m, hi) if B.brim_volume(m, pb) < v_up else (lo, m)
+    d = _fun_h(p) + (lo + hi) / 2
     H = _floor0(p) + d
-    return dict(depth=d, H=H, r_rim=_r_at(d, p), r_o_rim=_r_at(d, p) + p["WALL"], r_o_floor=p["BORE"] / 2 + p["WALL"])
+    return dict(depth=d, H=H, r_rim=_r_at(d, p), r_o_rim=_r_at(d, p) + p["WALL"], fun_h=_fun_h(p))
 
 
 def _plate_plan(p, grow=0.0):
@@ -72,7 +94,7 @@ def _bumps(p, grow=0.0):
 
 def _handle(p):
     w, hh = p["HANDLE_W"], p["HANDLE_H"]
-    x0 = p["BORE"] / 2 + p["WALL"] - 2.0
+    x0 = p["BASE_R"] - 2.0
     bar = g.box(x0, x0 + p["HANDLE_L"] + 2.0, -w / 2, w / 2, 0.0, hh)
     return g.diff(bar, g.cyl(2.2, -1, hh + 1).apply_translation((x0 + p["HANDLE_L"] - 3.0, 0, 0)))
 
@@ -80,17 +102,22 @@ def _handle(p):
 def build_cup(size, p=P, pockets=True):
     d = dims(size, p)
     H, w = d["H"], p["WALL"]
-    rb = p["BORE"] / 2
     f0 = _floor0(p)
-    cup = g.revolve([(0, 0), (rb + w, 0), (rb + w, 3.0), (d["r_o_rim"], H), (d["r_rim"], H), (rb, f0), (0, f0)])
-    cup = g.union(cup, _handle(p))
-    # delikler: ust deri duz, alt deri 45 derece havsali (sise agzi ortalanir)
+    rh, r1, fh = p["HOLE_D"] / 2, p["FUN_R1"], d["fun_h"]
+    rb = p["BASE_R"]
+    # dis: taban levhasi yaricapi rb'den 45 derece pahla cidara, sonra 7 derece; ic: huni + cidar
+    z_ch = f0 + (r1 + w - rb)                        # pahin cidara ulastigi z
+    outer = [(0, 0), (rb, 0), (rb, f0), (r1 + w, z_ch), (d["r_o_rim"], H)]
+    inner = [(d["r_rim"], H), (r1, f0 + fh), (rh, f0), (0, f0)]
+    cup = g.revolve(outer + inner)
+    base = g.extrude(Point(0, 0).buffer(rb, resolution=128).union(sbox(0, -p["BASE_HW"], p["BASE_X1"], p["BASE_HW"])).buffer(0),
+                     0.0, f0)
+    cup = g.union(cup, base, _handle(p))
+    # aciklik levhanin icinden asagi: ust deri duz, alt deri 45 derece havsali (sise agzi ortalanir)
     z_ch0, z_ch1 = p["SLAB_BOT"], p["SLAB_BOT"] + p["CH_H"]
-    rh = p["HOLE_D"] / 2
-    cup = g.diff(cup, g.cyl(rh, z_ch0 - 1, f0 + 1).apply_translation((p["HOLE_X"], 0, 0)),
-                 g.revolve([(0, -0.1), (rh + p["SLAB_BOT"] + 0.1, -0.1), (rh, p["SLAB_BOT"]), (0, p["SLAB_BOT"])])
-                 .apply_translation((p["HOLE_X"], 0, 0)))
-    # surgu kanali: plakanin plani (FIT payli) kapali..acik supurmesi + kol yarigi sapin icinde + surgu yarigi ustte
+    cup = g.diff(cup, g.cyl(rh, -1, f0 + 0.5),
+                 g.revolve([(0, -0.1), (rh + p["SLAB_BOT"] + 0.1, -0.1), (rh, p["SLAB_BOT"]), (0, p["SLAB_BOT"])]))
+    # surgu kanali: plakanin plani (FIT payli) kapali..acik supurmesi + kol yarigi + surgu yarigi ustte
     plan = _plate_plan(p, p["FIT"] / 2).union(sbox(0, -p["PL_HW"] - p["FIT"] / 2, p["PL_X1"] + p["TRAVEL"] + 3.0,
                                                     p["PL_HW"] + p["FIT"] / 2))
     stem = sbox(0, -p["STEM_HW"] - p["FIT"] / 2, p["TAB_X0"] + p["TAB_L"] + p["TRAVEL"] + 3.0, p["STEM_HW"] + p["FIT"] / 2)

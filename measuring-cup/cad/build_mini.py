@@ -30,7 +30,7 @@ def iv(a, b):
 def verify(p=S.P):
     out = {}
     pl, pl0 = S.build_plate(p), S.build_plate(p, bumps=False)
-    hole = g.cyl(p["HOLE_D"] / 2, 0, 6).apply_translation((p["HOLE_X"], 0, 0))
+    hole = g.cyl(p["HOLE_D"] / 2, 0.5, 4.0)
     for size in S.SIZES:
         c, c0, cap = S.build_cup(size, p), S.build_cup(size, p, pockets=False), S.build_cap(size, p)
         w = wb = 0.0
@@ -44,8 +44,8 @@ def verify(p=S.P):
                                    ust_kapak_mm3=round(iv(c, cap), 3),
                                    acikken_delik_ortusu_mm3=round(iv(po, hole), 3),
                                    kapaliyken_delik_ortusu_oran=round(iv(pl, hole) / (np.pi * (p["HOLE_D"] / 2) ** 2 * p["PL_T"]), 3),
-                                   derinlik_mm=round(d["depth"], 2),
-                                   hacim_ml=round(S.B.brim_volume(d["depth"], dict(S.B.P, BORE=p["BORE"], DRAFT=p["DRAFT"])) / 1000, 4))
+                                   derinlik_mm=round(d["depth"], 2), yukseklik_mm=round(d["H"], 2),
+                                   hacim_ml=round((S._fun_vol(p) + S.B.brim_volume(d["depth"] - d["fun_h"], dict(S.B.P, BORE=2 * p["FUN_R1"], DRAFT=p["DRAFT"]))) / 1000, 4))
     oh = {}
     for nm, m in (("hazne_15", on_bed(S.build_cup(15, p))), ("hazne_30", on_bed(S.build_cup(30, p))),
                   ("surgu", on_bed(pl)), ("ust_kapak_15", on_bed(flip(S.build_cap(15, p))))):

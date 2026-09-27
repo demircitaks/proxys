@@ -5,17 +5,21 @@
     "WALL": 2.0,
     "FIT": 0.3,
     "SLAB_BOT": 1.2,
-    "CH_H": 2.35,
+    "CH_H": 2.3,
     "FLOOR_T": 1.6,
-    "HOLE_D": 21.0,
-    "HOLE_X": -8.5,
-    "PL_HW": 14.0,
-    "PL_RF": 20.5,
-    "PL_X1": 5.0,
-    "PL_T": 1.9,
-    "TRAVEL": 24.0,
+    "HOLE_D": 22.0,
+    "FUN_A": 45.0,
+    "FUN_R1": 19.0,
+    "BASE_R": 17.5,
+    "BASE_X1": 45.0,
+    "BASE_HW": 15.0,
+    "PL_HW": 13.0,
+    "PL_RF": 17.0,
+    "PL_X1": 11.0,
+    "PL_T": 2.0,
+    "TRAVEL": 29.0,
     "STEM_HW": 4.0,
-    "TAB_X0": 36.0,
+    "TAB_X0": 30.0,
     "TAB_L": 6.0,
     "TAB_H": 8.5,
     "FING_L": 14.0,
@@ -23,7 +27,7 @@
     "FING_SLOT": 0.6,
     "BUMP": 0.5,
     "BUMP_W": 2.5,
-    "BUMP_X": -12.0,
+    "BUMP_X": -3.0,
     "GROOVE_D": 0.5,
     "CAP_T": 1.6,
     "CAP_SKIRT": 4.0,
@@ -34,7 +38,7 @@
     "SKIRT_T": 1.4,
     "EAR_W": 6.0,
     "EAR_OUT": 4.0,
-    "HANDLE_L": 55.0,
+    "HANDLE_L": 58.0,
     "HANDLE_W": 16.0,
     "HANDLE_H": 6.5
   },
@@ -42,50 +46,50 @@
     {
       "dosya": "01-hazne-15ml.stl",
       "not_": "Baski: TABAN TABLADA (agiz yukari), sap tablada. Destek yok.",
-      "hacim_cm3": 10.68,
+      "hacim_cm3": 13.9,
       "olcu_mm": [
-        98.5,
-        45.0,
-        17.4
+        97.4,
+        43.9,
+        20.8
       ]
     },
     {
       "dosya": "01-hazne-30ml.stl",
       "not_": "Baski: TABAN TABLADA (agiz yukari).",
-      "hacim_cm3": 13.84,
+      "hacim_cm3": 17.38,
       "olcu_mm": [
-        99.8,
-        47.6,
-        28.0
+        98.8,
+        46.7,
+        32.0
       ]
     },
     {
       "dosya": "02-surgu.stl",
       "not_": "Baski: ALT YUZ TABLADA, basparmak surgusu yukari. Ortak.",
-      "hacim_cm3": 2.06,
+      "hacim_cm3": 1.98,
       "olcu_mm": [
-        62.5,
-        29.0,
+        53.0,
+        27.0,
         7.3
       ]
     },
     {
       "dosya": "03-ust-kapak-15ml.stl",
       "not_": "Baski: DIS YUZU TABLADA, etek yukari.",
-      "hacim_cm3": 3.86,
+      "hacim_cm3": 3.71,
       "olcu_mm": [
-        52.1,
-        48.1,
+        51.0,
+        47.0,
         5.6
       ]
     },
     {
       "dosya": "03-ust-kapak-30ml.stl",
       "not_": "Baski: DIS YUZU TABLADA, etek yukari.",
-      "hacim_cm3": 4.24,
+      "hacim_cm3": 4.09,
       "olcu_mm": [
-        54.7,
-        50.7,
+        53.8,
+        49.8,
         5.6
       ]
     }
@@ -93,36 +97,38 @@
   "dogrulama": {
     "15 mL": {
       "surgu_kayma_mm3": 0.0,
-      "centik_esneme_mm3": 2.286,
+      "centik_esneme_mm3": 2.406,
       "kapali_mm3": 0.0,
       "acik_mm3": 0.0,
       "ust_kapak_mm3": 0.0,
       "acikken_delik_ortusu_mm3": 0.0,
       "kapaliyken_delik_ortusu_oran": 1.0,
-      "derinlik_mm": 12.23,
+      "derinlik_mm": 15.73,
+      "yukseklik_mm": 20.83,
       "hacim_ml": 15.0
     },
     "30 mL": {
       "surgu_kayma_mm3": 0.0,
-      "centik_esneme_mm3": 2.286,
+      "centik_esneme_mm3": 2.406,
       "kapali_mm3": 0.0,
       "acik_mm3": 0.0,
       "ust_kapak_mm3": 0.0,
       "acikken_delik_ortusu_mm3": 0.0,
       "kapaliyken_delik_ortusu_oran": 1.0,
-      "derinlik_mm": 22.9,
+      "derinlik_mm": 26.94,
+      "yukseklik_mm": 32.04,
       "hacim_ml": 30.0
     },
     "baski_cikintilari": {
       "hazne_15": {
-        "sorunlu_mm2": 1052.9,
-        "yuzde": 9.28,
-        "koprü_mm2": 1052.9
+        "sorunlu_mm2": 1151.0,
+        "yuzde": 9.21,
+        "koprü_mm2": 1151.0
       },
       "hazne_30": {
-        "sorunlu_mm2": 1055.1,
-        "yuzde": 7.34,
-        "koprü_mm2": 1055.1
+        "sorunlu_mm2": 1149.8,
+        "yuzde": 7.38,
+        "koprü_mm2": 1149.8
       },
       "surgu": {
         "sorunlu_mm2": 0.0,
@@ -130,9 +136,9 @@
         "koprü_mm2": 0.0
       },
       "ust_kapak_15": {
-        "sorunlu_mm2": 104.3,
-        "yuzde": 1.97,
-        "koprü_mm2": 104.3
+        "sorunlu_mm2": 101.8,
+        "yuzde": 2.0,
+        "koprü_mm2": 101.8
       }
     }
   }

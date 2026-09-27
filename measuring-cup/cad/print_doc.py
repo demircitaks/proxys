@@ -50,8 +50,9 @@ def main():
                             title="Mini toz kepçesi — baskı kılavuzu", author="proxys / measuring-cup")
     W = A4[0] - 32 * mm
     el = [P("Mini toz kepçesi 15 / 30 mL — 3D baskı kılavuzu (Bambu Lab X1C)", H1),
-          P("Üç parça: hazne, tabanının içindeki kanalda kayan deliksiz sürgü, üst kapak. Pim, O-ring, destek yok. "
-            "Sapın üstündeki başparmak sürgüsünü 24 mm kendine çekince taban deliği açılır, toz şişeye akar.", B),
+          P("Üç parça: huni tabanlı hazne (en altta Ø22 açıklık = tabanın tamamı), taban levhasının içindeki kanalda kayan "
+            "deliksiz sürgü, üst kapak. Pim, O-ring, destek yok. Sapın üstündeki başparmak sürgüsünü 29 mm kendine çekince "
+            "açıklık tamamen açılır, toz şişeye akar.", B),
           Spacer(1, 6), img("mini-kepce.png", W * 0.5), Spacer(1, 4),
           P("1. Parçalar ve baskı yönü", H2)]
     orient = {"01-hazne-15ml.stl": ("1", "Taban tablada, ağız yukarı — STL bu yönde. Sap tablada."),
@@ -64,7 +65,7 @@ def main():
         q, note = orient.get(pt["dosya"], ("1", pt["not_"]))
         rows.append([pt["dosya"], q, "%.1f cm³" % pt["hacim_cm3"], " × ".join("%.0f" % x for x in pt["olcu_mm"]), note])
     el += [tbl(rows, [38 * mm, 10 * mm, 16 * mm, 26 * mm, W - 90 * mm]), Spacer(1, 3),
-           P("Bir kepçe = hazne + sürgü + üst kapak (istenen boy). İki boy toplam ≈ 35 cm³ PETG (~45 g).", S),
+           P("Bir kepçe = hazne + sürgü + üst kapak (istenen boy). İki boy toplam ≈ 41 cm³ PETG (~52 g).", S),
            Spacer(1, 4), img("mini-parcalar.png", W), P("Soldan sağa: hazne, sürgü, üst kapak.", S),
            P("2. Dilimleyici ayarları (Bambu Studio, X1C)", H2)]
     rows = [["Ayar", "Değer", "Neden"],
@@ -72,16 +73,16 @@ def main():
             ["Nozul / katman", "0,4 mm · 0,16 mm", "0,5 mm çentik tümsekleri ve 0,4 mm kapak dudağı için"],
             ["Duvar / üst-alt", "3 duvar · 4 üst · 4 alt", "Sürgü kanalının 1,2 mm alt derisi ve yay parmakları tamamen duvar"],
             ["Dolgu", "%15", "Sap için yeterli"],
-            ["Destek", "KAPALI", "45°'den dik yüzey yok; tek köprü haznenin iç tabanı (sürgü kanalı üstünde 28 mm) ve sapın içindeki kol yarığı tavanı (8 mm)"],
-            ["Köprüleme", "Varsayılan, fan %100", "Kanal tavanı 28 mm; delik kenarında hafif sarkma olabilir, işlevi etkilemez"],
+            ["Destek", "KAPALI", "45°'den dik yüzey yok (dış pah ve iç huni tam 45°); köprü: sürgü kanalının tavanı (26 mm) ve sapın içindeki kol yarığı tavanı (8 mm)"],
+            ["Köprüleme", "Varsayılan, fan %100", "Kanal tavanı 26 mm; açıklık kenarında hafif sarkma olabilir, işlevi etkilemez"],
             ["Brim", "Gerekmez", "Tüm parçaların geniş düz tabanı var"],
             ["Tabla", "Textured PEI 70 °C", "PETG"],
             ["Elephant foot", "0,15 mm", "Kapak etekleri ve taban kapağı tam ölçüde otursun"]]
     el += [tbl(rows, [32 * mm, 40 * mm, W - 72 * mm]),
            P("3. Montaj ve kullanım", H2)]
     for i, t in enumerate([
-            "Sürgüyü sapın ucundan, başparmak sürgüsü yukarıda, sapın içindeki kanala sokup öne itin; plaka haznenin altındaki kanala girer, sonunda klik (kapalı).",
-            "Sürgüyü geri çekin: 24 mm sonra ikinci klik (açık). Kapalıyken plaka deliği tamamen örter; çantada dökülmez.",
+            "Sürgüyü sapın ucundan, başparmak sürgüsü yukarıda, sapın içindeki kanala sokup öne itin; plaka açıklığın altına girer, sonunda klik (kapalı).",
+            "Sürgüyü geri çekin: 29 mm sonra ikinci klik (açık). Kapalıyken plaka açıklığı tamamen örter; çantada dökülmez.",
             "Üst kapağı ağza bastırın; kulağından çekip açın.",
             "Dökerken kepçeyi şişe ağzına oturtun (alttaki havşa ağzı ortalar), başparmakla sürgüyü kendinize çekin, tıklatın, ileri itin.",
             "Temizlik: sürgüyü sapın ucundan tamamen çekip çıkarın; elde yıkayın."], 1):
@@ -92,17 +93,17 @@ def main():
             ["Sürgü sıkı / takılıyor", "FIT 0,30 → 0,40; kanal tavanı sarkmışsa CH_H 2,35 → 2,6"],
             ["Sürgü gevşek, klik hissedilmiyor", "BUMP 0,5 → 0,6 veya FING_T 2,0 → 2,4"],
             ["Üst kapak takılmıyor / gevşek", "GROOVE_D 0,5 → 0,6 / 0,4"],
-            ["Toz delikten geç akıyor", "HOLE_D 21 → 23 (PL_RF 20,5 kalır, HOLE_X −8,5)"]]
+            ["Toz geç akıyor", "FUN_A 45 → 55 (huni dikleşir) veya HOLE_D 22 → 24 (PL_HW 13 → 14)"]]
     el += [tbl(rows, [70 * mm, W - 70 * mm]), Spacer(1, 4),
            P("Yeniden üretim: <b>python3 cad/build_mini.py</b> → STL'ler <b>stl/toz-mini/</b>; bu belge <b>python3 cad/print_doc.py</b>.", S),
            P("5. Doğrulama (rapordan)", H2)]
     d = rep["dogrulama"]
     rows = [["Ölçüm", "15 mL", "30 mL"],
-            ["Sürgü 0–24 mm kayarken hazneyle girişim (tümseksiz)", "%.2f mm³" % d["15 mL"]["surgu_kayma_mm3"], "%.2f mm³" % d["30 mL"]["surgu_kayma_mm3"]],
+            ["Sürgü 0–29 mm kayarken hazneyle girişim (tümseksiz)", "%.2f mm³" % d["15 mL"]["surgu_kayma_mm3"], "%.2f mm³" % d["30 mL"]["surgu_kayma_mm3"]],
             ["Yay parmağı tümseklerinin kanal duvarına binmesi (esneme bölgesi)", "%.2f mm³" % d["15 mL"]["centik_esneme_mm3"], "%.2f mm³" % d["30 mL"]["centik_esneme_mm3"]],
             ["Kapalı / açık / üst kapak takılı", "0 / 0 / 0", "0 / 0 / 0"],
-            ["Kapalıyken delik örtülü (plaka ∩ delik / delik hacmi)", "%.2f" % d["15 mL"]["kapaliyken_delik_ortusu_oran"], "%.2f" % d["30 mL"]["kapaliyken_delik_ortusu_oran"]],
-            ["Açıkken plaka delik üstünde", "%.2f mm³" % d["15 mL"]["acikken_delik_ortusu_mm3"], "%.2f mm³" % d["30 mL"]["acikken_delik_ortusu_mm3"]],
+            ["Kapalıyken açıklık örtülü (plaka ∩ açıklık / açıklık hacmi)", "%.2f" % d["15 mL"]["kapaliyken_delik_ortusu_oran"], "%.2f" % d["30 mL"]["kapaliyken_delik_ortusu_oran"]],
+            ["Açıkken plaka açıklık üstünde", "%.2f mm³" % d["15 mL"]["acikken_delik_ortusu_mm3"], "%.2f mm³" % d["30 mL"]["acikken_delik_ortusu_mm3"]],
             ["Silme hacim (derinlik)", "%.4f mL (%.1f mm)" % (d["15 mL"]["hacim_ml"], d["15 mL"]["derinlik_mm"]),
              "%.4f mL (%.1f mm)" % (d["30 mL"]["hacim_ml"], d["30 mL"]["derinlik_mm"])]]
     el += [tbl(rows, [W - 70 * mm, 35 * mm, 35 * mm]), Spacer(1, 4),
