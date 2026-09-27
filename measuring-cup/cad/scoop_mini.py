@@ -2,18 +2,18 @@
 
 - HAZNE: yuvarlak, ust kismi 7 derece konik, altta 45 derecelik HUNI; en altta
   Ø22 aciklik = tabanin tamami (duz taban yok).  Aciklik, haznenin altindaki
-  ince TABAN LEVHASININ (alt deri + surgu kanali + ust deri) icinden gecer;
-  levha sapin kokune kadar uzanir.  Dis yuz altta 45 derece pahli (hafif huni).
-  Kanal levhanin icinden sapin icine devam eder; sapin ustunde surgu yarigi.
-- SURGU (taban plakasi): kanalda kayan DELIKSIZ plaka + sapin icinden gecen kol
-  + sapin ustunden cikan tirtikli basparmak surgusu.  Kapali: plaka acikligin
-  altinda.  Surguyu TRAVEL kadar kendine cek: aciklik tamamen acilir, toz asagi.
-  Plakanin iki yanindaki yay parmaklari kanal duvarindaki yuvalara kapali ve
-  acik konumda oturur (klik).
-- UST KAPAK: agza klik diye gecen duz kapak (saklama), kulakli.
-z = 0 haznenin alt yuzu; huni agzi (aciklik) z = FLOOR0 = SLAB_BOT + CH_H + FLOOR_T.
-Baski: hazne TABAN TABLADA (agiz yukari), surgu alt yuzu tablada, kapak dis
-yuzu tablada.  Kopru: kanal tavani (26 mm).
+  ince TABAN LEVHASININ (alt deri + surgu kanali + ust deri) icinden gecer.
+  Dis yuz altta 45 derece pahli (hafif huni).  SAP AGIZ HIZASINDA, cidara
+  bagli; kokunde catal yarigi (surgunun ayagi icinden gecer).
+- SURGU (taban plakasi): kanalda kayan DELIKSIZ plaka + arkaya uzanan kol +
+  haznenin disinda dik yukselen AYAK + sapin ustunde tirtikli basparmak
+  surgusu.  Kapali: plaka acikligin altinda, yay parmaklari kanal duvarindaki
+  yuvaya oturur (klik).  Surguyu TRAVEL kadar kendine cek: aciklik tamamen
+  acilir; ayak catalin sonuna dayanir.  Ayak boyu hazneye gore (15/30).
+- UST KAPAK: agza klik diye gecen duz kapak; etegi sap hizasinda kesik.
+z = 0 haznenin alt yuzu; aciklik z = FLOOR0; agiz z = H.
+Baski: hazne AGIZ TABLADA (ters; sap tablada, huni yukari), surgu plaka
+tablada ayak dik, kapak dis yuzu tablada.  Kopru: kanal tavani (26 mm).
 """
 import numpy as np
 import trimesh
@@ -27,15 +27,16 @@ P = dict(
     SLAB_BOT=1.2, CH_H=2.3, FLOOR_T=1.6,            # taban levhasi katlari (alt deri, kanal, ust deri)
     HOLE_D=22.0,                                     # en alttaki aciklik (merkezde) = tabanin tamami
     FUN_A=45.0, FUN_R1=19.0,                         # huni: aciklik yaricapindan FUN_R1'e 45 derece, sonra 7 derece cidar
-    BASE_R=17.5, BASE_X1=45.0, BASE_HW=15.0,         # taban levhasi: haznenin altindaki daire + sapin kokune uzanan dil
+    BASE_R=17.5,                                     # taban levhasi yaricapi (haznenin altindaki daire)
     PL_HW=13.0, PL_RF=17.0, PL_X1=11.0, PL_T=2.0,    # plaka: yarim genislik, on yaricap, arka kenar, kalinlik
     TRAVEL=29.0,
-    STEM_HW=4.0,                                     # kol yarim genisligi (sapin icinden gecer)
-    TAB_X0=30.0, TAB_L=6.0, TAB_H=8.5,               # basparmak surgusu (kapali konum x0, uzunluk, ust z)
+    STEM_HW=4.0,                                     # kol / ayak yarim genisligi (catal yarigindan gecer)
+    LEG_T=6.0, LEG_GAP=2.2,                          # ayak kalinligi (x), ayagin cidardan/kapak eteginden uzakligi
+    TAB_H=3.5,                                       # basparmak surgusunun sap ustunden yuksekligi
     FING_L=14.0, FING_T=2.0, FING_SLOT=0.6,          # yay parmagi (plakanin yan kenarinda, arkadan bagli)
     BUMP=0.5, BUMP_W=2.5, BUMP_X=-3.0,               # tumsek (disa), kapali konumdaki x0
     GROOVE_D=0.5, CAP_T=1.6, CAP_SKIRT=4.0, CAP_GROOVE=(3.0, 2.0), SKIRT_T=1.4, EAR_W=6.0, EAR_OUT=4.0,
-    HANDLE_L=58.0, HANDLE_W=16.0, HANDLE_H=6.5,
+    HANDLE_L=58.0, HANDLE_W=16.0, HANDLE_H=6.5,      # sap: agiz hizasinda (z H-HANDLE_H .. H)
 )
 SIZES = (15, 30)
 cup_depth = B.cup_depth
@@ -92,11 +93,21 @@ def _bumps(p, grow=0.0):
     return out
 
 
-def _handle(p):
-    w, hh = p["HANDLE_W"], p["HANDLE_H"]
-    x0 = p["BASE_R"] - 2.0
-    bar = g.box(x0, x0 + p["HANDLE_L"] + 2.0, -w / 2, w / 2, 0.0, hh)
-    return g.diff(bar, g.cyl(2.2, -1, hh + 1).apply_translation((x0 + p["HANDLE_L"] - 3.0, 0, 0)))
+def _leg_x0(size, p):
+    return dims(size, p)["r_o_rim"] + p["LEG_GAP"]
+
+
+def _handle(size, p):
+    """Sap agiz hizasinda; kokunde catal yarigi (ayak + TRAVEL)."""
+    d = dims(size, p)
+    H, w, hh = d["H"], p["HANDLE_W"], p["HANDLE_H"]
+    x0 = d["r_o_rim"] - 1.5
+    bar = g.box(x0, x0 + p["HANDLE_L"], -w / 2, w / 2, H - hh, H)
+    bar = g.diff(bar, g.cyl(2.2, H - hh - 1, H + 1).apply_translation((x0 + p["HANDLE_L"] - 4.0, 0, 0)))
+    lx = _leg_x0(size, p)
+    fork = g.box(lx - p["FIT"] / 2, lx + p["LEG_T"] + p["TRAVEL"] + p["FIT"] / 2, -p["STEM_HW"] - p["FIT"] / 2,
+                 p["STEM_HW"] + p["FIT"] / 2, H - hh - 1, H + 1)
+    return g.diff(bar, fork)
 
 
 def build_cup(size, p=P, pockets=True):
@@ -110,50 +121,46 @@ def build_cup(size, p=P, pockets=True):
     outer = [(0, 0), (rb, 0), (rb, f0), (r1 + w, z_ch), (d["r_o_rim"], H)]
     inner = [(d["r_rim"], H), (r1, f0 + fh), (rh, f0), (0, f0)]
     cup = g.revolve(outer + inner)
-    base = g.extrude(Point(0, 0).buffer(rb, resolution=128).union(sbox(0, -p["BASE_HW"], p["BASE_X1"], p["BASE_HW"])).buffer(0),
-                     0.0, f0)
-    cup = g.union(cup, base, _handle(p))
+    base = g.cyl(rb, 0.0, f0)
+    cup = g.union(cup, base, _handle(size, p))
     # aciklik levhanin icinden asagi: ust deri duz, alt deri 45 derece havsali (sise agzi ortalanir)
     z_ch0, z_ch1 = p["SLAB_BOT"], p["SLAB_BOT"] + p["CH_H"]
     cup = g.diff(cup, g.cyl(rh, -1, f0 + 0.5),
                  g.revolve([(0, -0.1), (rh + p["SLAB_BOT"] + 0.1, -0.1), (rh, p["SLAB_BOT"]), (0, p["SLAB_BOT"])]))
     # surgu kanali: plakanin plani (FIT payli) kapali..acik supurmesi + kol yarigi + surgu yarigi ustte
-    plan = _plate_plan(p, p["FIT"] / 2).union(sbox(0, -p["PL_HW"] - p["FIT"] / 2, p["PL_X1"] + p["TRAVEL"] + 3.0,
-                                                    p["PL_HW"] + p["FIT"] / 2))
-    stem = sbox(0, -p["STEM_HW"] - p["FIT"] / 2, p["TAB_X0"] + p["TAB_L"] + p["TRAVEL"] + 3.0, p["STEM_HW"] + p["FIT"] / 2)
-    cup = g.diff(cup, g.extrude(plan.union(stem).buffer(0), z_ch0, z_ch1))
-    cup = g.diff(cup, g.box(p["TAB_X0"] - p["FIT"] / 2, p["TAB_X0"] + p["TAB_L"] + p["TRAVEL"] + p["FIT"] / 2,
-                            -p["STEM_HW"] - p["FIT"] / 2, p["STEM_HW"] + p["FIT"] / 2, z_ch1 - 0.1, p["HANDLE_H"] + 1))
+    plan = _plate_plan(p, p["FIT"] / 2).union(sbox(0, -p["PL_HW"] - p["FIT"] / 2, rb + 5.0, p["PL_HW"] + p["FIT"] / 2))
+    cup = g.diff(cup, g.extrude(plan.buffer(0), z_ch0, z_ch1))
     cup = g.diff(cup, cup_cap_groove(size, p))      # ust kapak klik kanali
-    if pockets:                                     # tumsek yuvalari: kapali ve acik
-        for dx in (0.0, p["TRAVEL"]):
-            cup = g.diff(cup, *[b.apply_translation((dx, 0, 0)) for b in _bumps(p, grow=p["FIT"] / 2)])
+    if pockets:                                     # tumsek yuvasi: yalniz kapali konum (acik konumu ayak catalda durur)
+        cup = g.diff(cup, *_bumps(p, grow=p["FIT"] / 2))
     return cup
 
 
-def build_plate(p=P, opened=False, bumps=True):
-    """Surgu: deliksiz plaka + kol + basparmak surgusu."""
+def build_plate(size, p=P, opened=False, bumps=True):
+    """Surgu: deliksiz plaka + kol + dik ayak + basparmak surgusu (boy hazneye gore)."""
+    d = dims(size, p)
+    H = d["H"]
     z0 = p["SLAB_BOT"]
     z1 = z0 + p["PL_T"]
     plan = _plate_plan(p)
     hw = p["PL_HW"]
-    # yay parmaklari: yan kenar seridi, arkadan bagli, onde serbest (yarik on kenarda acik)
-    for sgn in (1, -1):
+    for sgn in (1, -1):                              # yay parmaklari: yan kenar seridi, arkadan bagli, onde serbest
         ys = hw - p["FING_T"]
         xf = p["PL_X1"] - p["FING_L"]
         plan = plan.difference(sbox(-30, min(sgn * ys, sgn * (ys - p["FING_SLOT"])), xf,
                                     max(sgn * ys, sgn * (ys - p["FING_SLOT"]))))
         plan = plan.difference(sbox(xf - 0.6, min(sgn * (ys - p["FING_SLOT"]), sgn * (hw + 1)), xf,
-                                    max(sgn * (ys - p["FING_SLOT"]), sgn * (hw + 1))))  # parmagin serbest ucu
-    stem = sbox(p["PL_X1"] - 1.0, -p["STEM_HW"], p["TAB_X0"] + p["TAB_L"], p["STEM_HW"])
+                                    max(sgn * (ys - p["FING_SLOT"]), sgn * (hw + 1))))
+    lx = _leg_x0(size, p)
+    stem = sbox(p["PL_X1"] - 1.0, -p["STEM_HW"], lx + p["LEG_T"], p["STEM_HW"])
     pl = g.extrude(plan.union(stem).buffer(0), z0, z1)
     if bumps:
         pl = g.union(pl, *_bumps(p))
-    tab = g.box(p["TAB_X0"], p["TAB_X0"] + p["TAB_L"], -p["STEM_HW"], p["STEM_HW"], z1 - 0.1, p["TAB_H"])
-    for k in range(3):                              # tirtik
-        xc = p["TAB_X0"] + 1.2 + k * 1.8
-        tab = g.diff(tab, g.box(xc - 0.35, xc + 0.35, -p["STEM_HW"] - 1, p["STEM_HW"] + 1, p["TAB_H"] - 0.5, p["TAB_H"] + 1))
-    pl = g.union(pl, tab)
+    leg = g.box(lx, lx + p["LEG_T"], -p["STEM_HW"], p["STEM_HW"], z1 - 0.1, H + p["TAB_H"])
+    for k in range(3):                               # tirtik
+        xc = lx + 1.2 + k * 1.8
+        leg = g.diff(leg, g.box(xc - 0.35, xc + 0.35, -p["STEM_HW"] - 1, p["STEM_HW"] + 1, H + p["TAB_H"] - 0.5, H + p["TAB_H"] + 1))
+    pl = g.union(pl, leg)
     if opened:
         pl.apply_translation((p["TRAVEL"], 0, 0))
     return pl
@@ -171,7 +178,10 @@ def build_cap(size, p=P):
     lip = g.revolve([(r_w - p["GROOVE_D"] + 0.15, zc0 + 0.15), (r_w - p["GROOVE_D"] + 0.15, zc1 - 0.15),
                      (ri + 0.2, zc1 - 0.15), (ri + 0.2, zc0 + 0.15 - 0.4), (r_w + 0.1, zc0 + 0.15)])
     ear = g.box(ro - 0.5, ro + p["EAR_OUT"], -p["EAR_W"] / 2, p["EAR_W"] / 2, H - 0.6, H + p["CAP_T"])
-    return g.union(cap, lip, g.rotz(ear, 180.0))
+    cap = g.union(cap, lip, g.rotz(ear, 180.0))
+    # etek sap hizasinda kesik (sap agiz hizasinda cidara bagli)
+    gap = g.box(0, ro + 2, -p["HANDLE_W"] / 2 - p["FIT"], p["HANDLE_W"] / 2 + p["FIT"], H - p["CAP_SKIRT"] - 1, H + 0.02)
+    return g.diff(cap, gap)
 
 
 def cup_cap_groove(size, p=P):

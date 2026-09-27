@@ -11,17 +11,15 @@
     "FUN_A": 45.0,
     "FUN_R1": 19.0,
     "BASE_R": 17.5,
-    "BASE_X1": 45.0,
-    "BASE_HW": 15.0,
     "PL_HW": 13.0,
     "PL_RF": 17.0,
     "PL_X1": 11.0,
     "PL_T": 2.0,
     "TRAVEL": 29.0,
     "STEM_HW": 4.0,
-    "TAB_X0": 30.0,
-    "TAB_L": 6.0,
-    "TAB_H": 8.5,
+    "LEG_T": 6.0,
+    "LEG_GAP": 2.2,
+    "TAB_H": 3.5,
     "FING_L": 14.0,
     "FING_T": 2.0,
     "FING_SLOT": 0.6,
@@ -45,38 +43,48 @@
   "parcalar": [
     {
       "dosya": "01-hazne-15ml.stl",
-      "not_": "Baski: TABAN TABLADA (agiz yukari), sap tablada. Destek yok.",
-      "hacim_cm3": 13.9,
+      "not_": "Baski: AGIZ TABLADA (ters), sap tablada, huni yukari. Destek yok.",
+      "hacim_cm3": 12.55,
       "olcu_mm": [
-        97.4,
+        100.4,
         43.9,
         20.8
       ]
     },
     {
       "dosya": "01-hazne-30ml.stl",
-      "not_": "Baski: TABAN TABLADA (agiz yukari).",
-      "hacim_cm3": 17.38,
+      "not_": "Baski: AGIZ TABLADA (ters), sap tablada.",
+      "hacim_cm3": 16.03,
       "olcu_mm": [
-        98.8,
+        103.2,
         46.7,
         32.0
       ]
     },
     {
-      "dosya": "02-surgu.stl",
-      "not_": "Baski: ALT YUZ TABLADA, basparmak surgusu yukari. Ortak.",
-      "hacim_cm3": 1.98,
+      "dosya": "02-surgu-15ml.stl",
+      "not_": "Baski: PLAKA TABLADA, ayak dik.",
+      "hacim_cm3": 2.65,
       "olcu_mm": [
-        53.0,
+        47.1,
         27.0,
-        7.3
+        23.1
+      ]
+    },
+    {
+      "dosya": "02-surgu-30ml.stl",
+      "not_": "Baski: PLAKA TABLADA, ayak dik.",
+      "hacim_cm3": 3.21,
+      "olcu_mm": [
+        48.5,
+        27.0,
+        34.3
       ]
     },
     {
       "dosya": "03-ust-kapak-15ml.stl",
       "not_": "Baski: DIS YUZU TABLADA, etek yukari.",
-      "hacim_cm3": 3.71,
+      "hacim_cm3": 3.59,
       "olcu_mm": [
         51.0,
         47.0,
@@ -86,7 +94,7 @@
     {
       "dosya": "03-ust-kapak-30ml.stl",
       "not_": "Baski: DIS YUZU TABLADA, etek yukari.",
-      "hacim_cm3": 4.09,
+      "hacim_cm3": 3.98,
       "olcu_mm": [
         53.8,
         49.8,
@@ -101,6 +109,7 @@
       "kapali_mm3": 0.0,
       "acik_mm3": 0.0,
       "ust_kapak_mm3": 0.0,
+      "kapak_surgu_mm3": 0.0,
       "acikken_delik_ortusu_mm3": 0.0,
       "kapaliyken_delik_ortusu_oran": 1.0,
       "derinlik_mm": 15.73,
@@ -113,6 +122,7 @@
       "kapali_mm3": 0.0,
       "acik_mm3": 0.0,
       "ust_kapak_mm3": 0.0,
+      "kapak_surgu_mm3": 0.0,
       "acikken_delik_ortusu_mm3": 0.0,
       "kapaliyken_delik_ortusu_oran": 1.0,
       "derinlik_mm": 26.94,
@@ -121,24 +131,29 @@
     },
     "baski_cikintilari": {
       "hazne_15": {
-        "sorunlu_mm2": 1151.0,
-        "yuzde": 9.21,
-        "koprü_mm2": 1151.0
+        "sorunlu_mm2": 548.8,
+        "yuzde": 5.67,
+        "koprü_mm2": 548.8
       },
       "hazne_30": {
-        "sorunlu_mm2": 1149.8,
-        "yuzde": 7.38,
-        "koprü_mm2": 1149.8
+        "sorunlu_mm2": 544.8,
+        "yuzde": 4.26,
+        "koprü_mm2": 544.8
       },
-      "surgu": {
+      "surgu_15": {
+        "sorunlu_mm2": 0.0,
+        "yuzde": 0.0,
+        "koprü_mm2": 0.0
+      },
+      "surgu_30": {
         "sorunlu_mm2": 0.0,
         "yuzde": 0.0,
         "koprü_mm2": 0.0
       },
       "ust_kapak_15": {
-        "sorunlu_mm2": 101.8,
-        "yuzde": 2.0,
-        "koprü_mm2": 101.8
+        "sorunlu_mm2": 89.1,
+        "yuzde": 1.8,
+        "koprü_mm2": 89.1
       }
     }
   }
