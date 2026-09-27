@@ -43,7 +43,7 @@
   "parcalar": [
     {
       "dosya": "01-hazne-15ml.stl",
-      "not_": "Baski: AGIZ TABLADA (ters), sap tablada, huni yukari. Destek yok.",
+      "not_": "Model: sap ustte. Baski: 180 cevir -> AGIZ TABLADA, sap tablada, huni yukari. Destek yok.",
       "hacim_cm3": 12.55,
       "olcu_mm": [
         100.4,
@@ -53,7 +53,7 @@
     },
     {
       "dosya": "01-hazne-30ml.stl",
-      "not_": "Baski: AGIZ TABLADA (ters), sap tablada.",
+      "not_": "Model: sap ustte. Baski: 180 cevir -> AGIZ TABLADA.",
       "hacim_cm3": 16.03,
       "olcu_mm": [
         103.2,
@@ -63,7 +63,7 @@
     },
     {
       "dosya": "02-surgu-15ml.stl",
-      "not_": "Baski: PLAKA TABLADA, ayak dik.",
+      "not_": "Baski: oldugu gibi, plaka tablada, ayak dik.",
       "hacim_cm3": 2.65,
       "olcu_mm": [
         47.1,
@@ -73,7 +73,7 @@
     },
     {
       "dosya": "02-surgu-30ml.stl",
-      "not_": "Baski: PLAKA TABLADA, ayak dik.",
+      "not_": "Baski: oldugu gibi, plaka tablada, ayak dik.",
       "hacim_cm3": 3.21,
       "olcu_mm": [
         48.5,
@@ -83,7 +83,7 @@
     },
     {
       "dosya": "03-ust-kapak-15ml.stl",
-      "not_": "Baski: DIS YUZU TABLADA, etek yukari.",
+      "not_": "Baski: 180 cevir -> dis yuzu tablada, etek yukari.",
       "hacim_cm3": 3.59,
       "olcu_mm": [
         51.0,
@@ -93,7 +93,7 @@
     },
     {
       "dosya": "03-ust-kapak-30ml.stl",
-      "not_": "Baski: DIS YUZU TABLADA, etek yukari.",
+      "not_": "Baski: 180 cevir -> dis yuzu tablada, etek yukari.",
       "hacim_cm3": 3.98,
       "olcu_mm": [
         53.8,

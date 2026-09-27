@@ -58,16 +58,20 @@ def verify(p=S.P):
 
 def main(render_png=True):
     os.makedirs(STL, exist_ok=True)
-    parts = [("01-hazne-15ml.stl", on_bed(flip(S.build_cup(15))), "Baski: AGIZ TABLADA (ters), sap tablada, huni yukari. Destek yok."),
-             ("01-hazne-30ml.stl", on_bed(flip(S.build_cup(30))), "Baski: AGIZ TABLADA (ters), sap tablada."),
-             ("02-surgu-15ml.stl", on_bed(S.build_plate(15)), "Baski: PLAKA TABLADA, ayak dik."),
-             ("02-surgu-30ml.stl", on_bed(S.build_plate(30)), "Baski: PLAKA TABLADA, ayak dik."),
-             ("03-ust-kapak-15ml.stl", on_bed(flip(S.build_cap(15))), "Baski: DIS YUZU TABLADA, etek yukari."),
-             ("03-ust-kapak-30ml.stl", on_bed(flip(S.build_cap(30))), "Baski: DIS YUZU TABLADA, etek yukari.")]
+    # (dosya, model yonunde mesh, baski icin cevrilsin mi, not)
+    parts = [("01-hazne-15ml.stl", S.build_cup(15), True, "Model: sap ustte. Baski: 180 cevir -> AGIZ TABLADA, sap tablada, huni yukari. Destek yok."),
+             ("01-hazne-30ml.stl", S.build_cup(30), True, "Model: sap ustte. Baski: 180 cevir -> AGIZ TABLADA."),
+             ("02-surgu-15ml.stl", S.build_plate(15), False, "Baski: oldugu gibi, plaka tablada, ayak dik."),
+             ("02-surgu-30ml.stl", S.build_plate(30), False, "Baski: oldugu gibi, plaka tablada, ayak dik."),
+             ("03-ust-kapak-15ml.stl", S.build_cap(15), True, "Baski: 180 cevir -> dis yuzu tablada, etek yukari."),
+             ("03-ust-kapak-30ml.stl", S.build_cap(30), True, "Baski: 180 cevir -> dis yuzu tablada, etek yukari.")]
+    os.makedirs(os.path.join(STL, "baski"), exist_ok=True)
     report = {"parametreler": dict(S.P), "parcalar": []}
-    for name, mesh, note in parts:
+    for name, mesh0, do_flip, note in parts:
+        mesh = on_bed(mesh0)                                  # model yonu (sap ustte)
         assert mesh.is_volume, name
         mesh.export(os.path.join(STL, name))
+        on_bed(flip(mesh0) if do_flip else mesh0).export(os.path.join(STL, "baski", name))   # baski yonu
         report["parcalar"].append(dict(dosya=name, not_=note, hacim_cm3=round(mesh.volume / 1000, 2),
                                        olcu_mm=[round(float(x), 1) for x in mesh.extents]))
         print("%-22s %6.2f cm3  %s" % (name, mesh.volume / 1000, np.round(mesh.extents, 1)))

@@ -31,11 +31,15 @@ kendine çek, hafifçe tıklat, sürgüyü ileri it.
 
 ![Parçalar](docs/mini-parcalar.png)
 
+`stl/toz-mini/` dosyaları **model yönünde** (sap üstte, kullanıldığı gibi).
+`stl/toz-mini/baski/` aynı parçalar **baskı yönünde** (çevrilmiş) — dilimleyiciye
+doğrudan bunları atabilirsin.
+
 | Dosya | Baskı yönü |
 |---|---|
-| `01-hazne-15ml.stl` · `01-hazne-30ml.stl` | **Ağız tablada (ters)**, sap tablada, huni yukarı. İç huni ve dış pah 45° → destek yok |
-| `02-surgu-15ml.stl` · `-30ml.stl` | Plaka tablada, ayak dik yukarı |
-| `03-ust-kapak-15ml.stl` · `-30ml.stl` | Dış yüzü tablada, etek yukarı |
+| `01-hazne-15ml.stl` · `01-hazne-30ml.stl` | 180° çevir: **ağız tablada**, sap tablada, huni yukarı. İç huni ve dış pah 45° → destek yok |
+| `02-surgu-15ml.stl` · `-30ml.stl` | Olduğu gibi: plaka tablada, ayak dik yukarı |
+| `03-ust-kapak-15ml.stl` · `-30ml.stl` | 180° çevir: dış yüzü tablada, etek yukarı |
 
 PETG · 0,16 mm · 3 duvar · %15 dolgu · destek kapalı. Tek köprü: haznenin iç
 tabanı sürgü kanalının üstünde 28 mm köprülenir (X1C için sorun değil).

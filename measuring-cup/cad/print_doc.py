@@ -55,17 +55,19 @@ def main():
             "29 mm kendine çekince açıklık tamamen açılır, toz şişeye akar.", B),
           Spacer(1, 6), img("mini-kepce.png", W * 0.5), Spacer(1, 4),
           P("1. Parçalar ve baskı yönü", H2)]
-    orient = {"01-hazne-15ml.stl": ("1", "Ağız tablada (ters) — STL bu yönde; sap ve ağız tablada, huni yukarı."),
-              "01-hazne-30ml.stl": ("1", "Aynı."),
-              "02-surgu-15ml.stl": ("1", "Plaka tablada, ayak dik yukarı (24 mm)."),
-              "02-surgu-30ml.stl": ("1", "Aynı (ayak 35 mm)."),
-              "03-ust-kapak-15ml.stl": ("1", "Dış (düz) yüzü tablada, etek yukarı."),
-              "03-ust-kapak-30ml.stl": ("1", "Aynı.")}
+    orient = {"01-hazne-15ml.stl": ("1", "180° ÇEVİR: ağız ve sap tablada, huni yukarı. (stl/toz-mini/baski/ içindeki kopya zaten çevrili.)"),
+              "01-hazne-30ml.stl": ("1", "Aynı: 180° çevir."),
+              "02-surgu-15ml.stl": ("1", "Olduğu gibi: plaka tablada, ayak dik yukarı (24 mm)."),
+              "02-surgu-30ml.stl": ("1", "Olduğu gibi (ayak 35 mm)."),
+              "03-ust-kapak-15ml.stl": ("1", "180° ÇEVİR: dış (düz) yüzü tablada, etek yukarı."),
+              "03-ust-kapak-30ml.stl": ("1", "Aynı: 180° çevir.")}
     rows = [["Dosya", "Adet", "Hacim", "Boyut (mm)", "Yön / not"]]
     for pt in rep["parcalar"]:
         q, note = orient.get(pt["dosya"], ("1", pt["not_"]))
         rows.append([pt["dosya"], q, "%.1f cm³" % pt["hacim_cm3"], " × ".join("%.0f" % x for x in pt["olcu_mm"]), note])
     el += [tbl(rows, [38 * mm, 10 * mm, 16 * mm, 26 * mm, W - 90 * mm]), Spacer(1, 3),
+           P("STL'ler model yönündedir (sap üstte). Baskı yönünde çevrilmiş kopyalar <b>stl/toz-mini/baski/</b> klasöründe; "
+             "dilimleyiciye onları atarsan çevirmen gerekmez.", S),
            P("Bir kepçe = hazne + sürgü + üst kapak (hepsi istenen boy). İki boy toplam ≈ 42 cm³ PETG (~53 g).", S),
            Spacer(1, 4), img("mini-parcalar.png", W), P("Soldan sağa: hazne, sürgü, üst kapak.", S),
            P("2. Dilimleyici ayarları (Bambu Studio, X1C)", H2)]
