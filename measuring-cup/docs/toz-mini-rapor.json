@@ -13,7 +13,7 @@
     "SPOUT_L": 8.0,
     "FUN_A": 45.0,
     "FUN_R1": 19.0,
-    "BASE_R": 17.5,
+    "BASE_R": 19.0,
     "PL_HW": 13.0,
     "PL_RF": 17.0,
     "PL_X1": 11.0,
@@ -47,7 +47,7 @@
     {
       "dosya": "01-hazne-15ml.stl",
       "not_": "Model: sap ustte. Baski: 180 cevir -> AGIZ TABLADA, sap tablada, huni yukari. Destek yok.",
-      "hacim_cm3": 13.59,
+      "hacim_cm3": 14.55,
       "olcu_mm": [
         100.4,
         43.9,
@@ -57,7 +57,7 @@
     {
       "dosya": "01-hazne-30ml.stl",
       "not_": "Model: sap ustte. Baski: 180 cevir -> AGIZ TABLADA.",
-      "hacim_cm3": 17.08,
+      "hacim_cm3": 18.18,
       "olcu_mm": [
         103.2,
         46.7,
@@ -134,14 +134,14 @@
     },
     "baski_cikintilari": {
       "hazne_15": {
-        "sorunlu_mm2": 549.5,
-        "yuzde": 5.01,
-        "koprü_mm2": 549.5
+        "sorunlu_mm2": 442.9,
+        "yuzde": 4.04,
+        "koprü_mm2": 442.9
       },
       "hazne_30": {
-        "sorunlu_mm2": 545.5,
-        "yuzde": 3.88,
-        "koprü_mm2": 545.5
+        "sorunlu_mm2": 438.1,
+        "yuzde": 3.11,
+        "koprü_mm2": 438.1
       },
       "surgu_15": {
         "sorunlu_mm2": 0.0,

@@ -83,6 +83,12 @@ def main():
             ["Tabla", "Textured PEI 70 °C", "PETG"],
             ["Elephant foot", "0,15 mm", "Kapak etekleri ve taban kapağı tam ölçüde otursun"]]
     el += [tbl(rows, [32 * mm, 40 * mm, W - 72 * mm]),
+           P("2b. Hazır dilimlenmiş dosyalar (x1c/ klasörü)", H2),
+           P("<b>kepce-15ml-X1C.gcode.3mf</b> ve <b>kepce-30ml-X1C.gcode.3mf</b>: X1C için dilimlenmiş, tek plakada hazne + sürgü + üst kapak. "
+             "USB belleğe kopyala → yazıcı ekranında dosyayı seç → bas. Kablosuz: Bambu Studio'da Dosya → İçe aktar ile aç, "
+             "yazıcıyı seç, gönder. Tahmini süre/ağırlık: 15 mL ≈ 57 dk / 21,5 g; 30 mL ≈ 70 dk / 26,8 g. "
+             "Yazıcıda Textured PEI plaka takılı olmalı (tabla 70 °C); filament PETG. "
+             "<b>kepce-*-proje.3mf</b>: aynı plakalar dilimlenmemiş proje olarak (Bambu Studio / OrcaSlicer'da aç, değiştir, dilimle).", B),
            P("3. Montaj ve kullanım", H2)]
     for i, t in enumerate([
             "Sürgünün ayağını sapın kökündeki çatal yarığına üstten sokun; plakayı haznenin altındaki kanala arkadan sürüp öne itin, sonunda klik (kapalı). Kapalıyken plaka açıklığı tamamen örter; çantada dökülmez.",

@@ -46,6 +46,20 @@ tabanı sürgü kanalının üstünde 28 mm köprülenir (X1C için sorun değil
 Ayrıntı: `BASKI-KILAVUZU.pdf`. Sürgü sıkıysa `FIT` 0,30 → 0,40; klik zayıfsa
 `BUMP` 0,5 → 0,6; huni daha dik istenirse `FUN_A` 45 → 55 (`cad/scoop_mini.py`).
 
+## Hazır baskı dosyaları (Bambu Lab X1C)
+
+`x1c/` klasörü:
+
+| Dosya | Ne için |
+|---|---|
+| `kepce-15ml-X1C.gcode.3mf` · `kepce-30ml-X1C.gcode.3mf` | **Dilimlenmiş**, doğrudan basılır. USB belleğe at → yazıcı ekranında seç → bas. Ya da Bambu Studio'da *Dosya → İçe aktar* ile aç ve Wi-Fi/bulut üzerinden gönder. |
+| `kepce-15ml-proje.3mf` · `kepce-30ml-proje.3mf` | Dilimlenmemiş **proje**: Bambu Studio / OrcaSlicer'da aç, istersen ayarları değiştir, dilimle, gönder. |
+| `profil/` | Kullanılan X1C profilleri (0,4 nozul; 0,16 mm; Bambu PETG HF; 3 duvar; %15 gyroid; destek kapalı; brim yok; **Textured PEI tabla 70 °C**, nozul 245 °C). |
+
+Tek plakada hazne + sürgü + üst kapak: 15 mL ≈ **57 dk, 21,5 g**; 30 mL ≈ **70 dk, 26,8 g**.
+Yazıcıda *Textured PEI* plaka takılı olmalı; filament AMS'te PETG (HF) olarak tanımlı
+olmalı. Yeniden üretim: `cad/slice_x1c.sh` (OrcaSlicer CLI).
+
 ## Montaj
 
 1. Sürgünün ayağını sapın kökündeki çatal yarığına üstten sokun, plakayı

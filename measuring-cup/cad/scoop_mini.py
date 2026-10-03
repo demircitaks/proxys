@@ -29,7 +29,7 @@ P = dict(
     HOLE_D=22.0,                                     # en alttaki aciklik (merkezde) = tabanin tamami
     SPOUT_OD=20.6, SPOUT_WALL=1.1, SPOUT_L=8.0,      # sise boynuna GIREN boru (PCO-1881 ic Ø21.74, 26/22 ~21.4)
     FUN_A=45.0, FUN_R1=19.0,                         # huni: aciklik yaricapindan FUN_R1'e 45 derece, sonra 7 derece cidar
-    BASE_R=17.5,                                     # taban levhasi yaricapi (haznenin altindaki daire)
+    BASE_R=19.0,                                     # taban levhasi yaricapi (plaka onu 17 + FIT + 1.7 duvar)
     PL_HW=13.0, PL_RF=17.0, PL_X1=11.0, PL_T=2.0,    # plaka: yarim genislik, on yaricap, arka kenar, kalinlik
     TRAVEL=29.0,
     STEM_HW=4.0,                                     # kol / ayak yarim genisligi (catal yarigindan gecer)
@@ -136,6 +136,9 @@ def build_cup(size, p=P, pockets=True):
     # surgu kanali: plakanin plani (FIT payli) kapali..acik supurmesi + kol yarigi + surgu yarigi ustte
     plan = _plate_plan(p, p["FIT"] / 2).union(sbox(0, -p["PL_HW"] - p["FIT"] / 2, rb + 5.0, p["PL_HW"] + p["FIT"] / 2))
     cup = g.diff(cup, g.extrude(plan.buffer(0), z_ch0, z_ch1))
+    # levhanin arkasi: kanal duvarlarinin bittigi yerden (x = PL_X1 + 0.5) sonrasi, kanal genisliginde,
+    # levha boyunca tamamen kesilir -> ust/alt deri askida kalmaz (ters baskida cantilever olmaz)
+    cup = g.diff(cup, g.box(p["PL_X1"] + 0.5, rb + 5.0, -p["PL_HW"] - p["FIT"] / 2, p["PL_HW"] + p["FIT"] / 2, -1.0, f0 - 0.01))
     cup = g.diff(cup, cup_cap_groove(size, p))      # ust kapak klik kanali
     if pockets:                                     # tumsek yuvasi: yalniz kapali konum (acik konumu ayak catalda durur)
         cup = g.diff(cup, *_bumps(p, grow=p["FIT"] / 2))
